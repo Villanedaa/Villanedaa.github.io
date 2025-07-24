@@ -1,0 +1,40 @@
+
+.JEISON{
+    background-color: rgb(0, 0, 0);
+    color:rgb(255, 255, 255);
+    text-align: center;
+}
+.estilobtn {
+        background-color: #4CAF50; /* color  Verde */
+        border: none; /* sin borde */
+        border-radius: 12px; /* bordes redondeados */
+        color: rgb(243, 0, 0); /* color del texto */
+        padding: 15px 32px; /* tamaño del botón */
+        text-align: center; /* centrado del texto */
+        text-decoration: none; /* sin subrayado */
+        display: inline-block; /* en línea */
+        font-size: 16px; /* tamaño de la fuente */
+        margin: 4px 2px;/* margen */
+        cursor: pointer;/* cursor de mano */
+        transition-duration: 0.4s; /* transición suave */
+        transition: background-color 0.4s, color 0.4s; /* transición de color */
+    }
+    .estilobtn:hover { /* efecto al pasar el mouse */
+        background-color: rgb(234, 29, 29); /* color de fondo al pasar el mouse */
+        color: black; /* color del texto al pasar el mouse */
+        border: 2px solid #4CAF50; /* borde verde al pasar el mouse */
+    }
+
+    body{
+
+        background-color: rgb(226, 225, 225); /* color de fondo */
+    }
+
+    head{
+        background-color: rgb(215, 238, 9); /* color de fondo */
+    }
+.footer{
+    background-color: black;
+    color:white;
+    text-align: center;
+}
