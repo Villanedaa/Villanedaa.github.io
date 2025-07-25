@@ -38,6 +38,14 @@ nav ul li a:hover{/*cambiar el fondo al pasar el mouse*/
 
     background-color: rgb(69, 49, 204);
 }
+main{
+    display: flex;
+    gap : 20px; /*espacio entre section y aside*/
+}
+.contenido{
+
+    flex:3;
+}
 section{
     
     background-color: #c2adf0;
@@ -49,13 +57,17 @@ section{
 
 
 aside{
-    
+    flex:1;
     box-shadow: 0 0 5px(0,0,0,0.1);
     padding:15px;
     border-left: 4px solid #d98880;
-    background-color: #c2adf0;
+    background-color: #cdcad3;
     border-radius: 8px;
     border: 1px solid #ccc;
+}
+.redes-sociales img:hover{
+    transition: transform 0.3s;
+    transform: scale(1,2);
 }
 footer{
     background-color: black;
@@ -65,3 +77,5 @@ footer{
     box-shadow: 0 0 5px rgba(0,0,0,0.1);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
+
