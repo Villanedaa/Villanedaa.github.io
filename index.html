@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> Hoja de vida </title>
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
+    <script src="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script><!--link de js de bootstrap-->
+    <link rel="stylesheet" href="/css/style.css"> <!-- referencia al archivo de estilos -->
 
     <link rel="stylesheet" href="/css/iconos.css">
     <link rel="stylesheet" href="/css/style.css"> <!-- referencia al archivo de estilos -->
@@ -15,12 +18,13 @@
     <h1 >ONCE CALDAS</h1> 
   
    </header>
+   
 </head>
 
 
 
 <body >
-   
+   <!--
    <nav>
     <ul>
         <li><a href="#inicio">Inicio</a></li>
@@ -28,7 +32,41 @@
         <li><a href="#contacto">Contacto</a></li>
 
     </ul>
-   </nav>  <!--menu de navegacion-->
+    </nav> menu de navegacion
+   -->
+                <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+              
+                <a class="navbar-brand" href="#">Menu</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span> 
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="#">Features</a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="#">Pricing</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Menu desplegable
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#inicio">Inicio</a></li>
+                        <li><a class="dropdown-item" href="#servicio">Servicio</a></li>
+                        <li><a class="dropdown-item" href="#contacto">Contacto</a></li>
+                    </ul>
+                    </li>
+                </ul>
+                </div>
+            </div>
+            </nav>
+   
     <main>
         
         <div class="contenido">
@@ -61,8 +99,7 @@
                     </section>
         </div>
                 <aside>
-                    <h3>Conectate con nosotros</h3>
-                    <p> siguenos en nuestras redes</p>
+                    
                     <h3>Conéctate con nosotros</h3>
                 <p>Síguenos en nuestras redes sociales para estar al día:</p>
 

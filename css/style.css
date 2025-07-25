@@ -36,7 +36,7 @@ nav ul li a{
 nav ul li a:hover{/*cambiar el fondo al pasar el mouse*/
 
 
-    background-color: rgb(69, 49, 204);
+    background-color: rgb(102, 100, 110);
 }
 main{
     display: flex;
@@ -76,6 +76,16 @@ footer{
     padding: 30px 15px;
     box-shadow: 0 0 5px rgba(0,0,0,0.1);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.navbar-brand{
+    color:white;
+    background-color: rgb(198, 172, 172);
+}
+/*permite aplicar sitios segun el ancho de la pantalla*/
+@media(nax-widht:768px){
+    nav ul{
+        flex-direction: column;
+    }
 }
 
 
