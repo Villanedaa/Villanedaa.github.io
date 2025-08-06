@@ -1,94 +1,126 @@
+body {
+    line-height: 1.6;
+    background-color: rgb(255, 254, 254);
+    /* color de fondo */
+}
+
+header {
+
+    background-color: #2c3e50;
+    color: #ffffff;
+    padding: 10px;
+    text-align: center;
+
+}
 
 
-    body{
-        line-height: 1.6;
-        background-color: rgb(255, 254, 254); /* color de fondo */
-    }
+nav ul {
 
-    header{
-
-        background-color: #2c3e50;
-        color:#ffffff;
-        padding: 10px;
-        text-align: center;
-
-    }
-  
-
-nav ul{
-
-    display: flex;/* muestra los elementos en fila*/
+    display: flex;
+    /* muestra los elementos en fila*/
     justify-content: center;
-    list-style:none;
+    list-style: none;
     background-color: #2c3e50;
     color: white;
 }
 
 
-nav ul li a{
+nav ul li a {
 
-    color:white;
+    color: white;
     text-decoration: none;
-    padding:8px 15px;
+    padding: 8px 15px;
     display: block;
 }
 
-nav ul li a:hover{/*cambiar el fondo al pasar el mouse*/
+nav ul li a:hover {
+    /*cambiar el fondo al pasar el mouse*/
 
 
     background-color: rgb(102, 100, 110);
 }
-main{
-    display: flex;
-    gap : 20px; /*espacio entre section y aside*/
-}
-.contenido{
 
-    flex:3;
+main {
+    display: flex;
+    gap: 20px;
+    /*espacio entre section y aside*/
 }
-section{
-    
+
+.contenido {
+
+    flex: 3;
+}
+
+section {
+
     background-color: #c2adf0;
-    padding:15px;
-    border-radius: 8px; /*bordes redondos*/
-    box-shadow: 0 0 5px rgba(0,0,0,0.1);/*sombrado y transparencia de los bordes*/
+    padding: 15px;
+    border-radius: 8px;
+    /*bordes redondos*/
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    /*sombrado y transparencia de los bordes*/
     margin-bottom: 15px;
 }
 
 
-aside{
-    flex:1;
-    box-shadow: 0 0 5px(0,0,0,0.1);
-    padding:15px;
+aside {
+    flex: 1;
+    box-shadow: 0 0 5px(0, 0, 0, 0.1);
+    padding: 15px;
     border-left: 4px solid #d98880;
     background-color: #cdcad3;
     border-radius: 8px;
     border: 1px solid #ccc;
 }
-.redes-sociales img:hover{
+
+.redes-sociales img:hover {
     transition: transform 0.3s;
-    transform: scale(1,2);
+    transform: scale(1, 2);
 }
-footer{
+
+footer {
     background-color: black;
-    color:white;
+    color: white;
     text-align: center;
     padding: 30px 15px;
-    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-.navbar-brand{
-    color:white;
-    background-color:  #2c3e50;
-}
-/*permite aplicar sitios segun el ancho de la pantalla*/
-@media(nax-widht:768px){
-    nav ul{
-        flex-direction: column;
-    }
-}
-.card{
+
+.navbar-brand {
+    color: white;
     background-color: #2c3e50;
 }
 
+/*permite aplicar sitios segun el ancho de la pantalla*/
+@media(nax-widht:768px) {
+    nav ul {
+        flex-direction: column;
+    }
+}
+
+.card {
+    background-color: #2c3e50;
+}
+
+.carousel-item img {
+
+    height: 150px;
+    /*altura*/
+    max-height: 80vh;
+    /*en pantallas pequenyas no se desporpocionara*/
+    object-fit: contain;
+}
+
+.carousel {
+    background-color: #2c3e50;
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
 

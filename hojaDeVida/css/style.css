@@ -1,0 +1,37 @@
+* {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.bg-primary {
+    background-color: #2c3e50 !important;
+}
+
+.progress {
+    background-color: rgba(255, 255, 255, 0.2);
+    /* el rgba permite dar transparencia */
+}
+
+.progress-bar {
+    background-color: white;
+}
+
+.text-primary {
+    color: #3498db !important;
+}
+
+
+/* box shadow es la sombra */
+
+.card {
+    transition: transform 0.3s ease, box-shadow 0.9s ease;
+}
+
+.card:hover {
+    transform: translateY(-15px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+header img {
+    width: 200px;
+    height: 400px;
+}

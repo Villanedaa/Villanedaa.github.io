@@ -1,131 +1,143 @@
-
 <!DOCTYPE html>
-<html lang="es"> <!-- referencia al idioma español -->
+<html lang="es">
 <head>
-    <meta charset="UTF-8"> <!-- caracter especial -->
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Hoja de vida </title>
+    <title>Hoja de Vida</title>
+
+    <!-- Enlaces a estilos y scripts -->
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
-    <script src="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script><!--link de js de bootstrap-->
-    <link rel="stylesheet" href="/css/style.css"> <!-- referencia al archivo de estilos -->
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/iconos.css">
-    <link rel="stylesheet" href="/css/style.css"> <!-- referencia al archivo de estilos -->
-    <link rel="icon" href="/images/Favicon.ico"> <!-- referencia al icono de la página -->
-    
-    <header>
-    <h1 >ONCE CALDAS</h1> 
-  
-   </header>
-   
+    <link rel="icon" href="/images/Favicon.ico">
+
 </head>
 
+<body>
+    <header>
+        <h1>ONCE CALDAS</h1>
+    </header>
 
-
-<body >
-   <!--
-   <nav>
-    <ul>
-        <li><a href="#inicio">Inicio</a></li>
-        <li><a href="/html/servicios.html" target="_blank">Servicios</a></li>
-        <li><a href="#contacto">Contacto</a></li>
-
-    </ul>
-    </nav> menu de navegacion
-   -->
-                <nav class="navbar navbar-expand-lg navbar-dark bg-dark"> <!--navdar-dark bd-dark sirve para expandir el navbar-->
-            <div class="container-fluid">
-              
-                <a class="navbar-brand" href="#">Menu</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Talento Tech</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
                 <span class="navbar-toggler-icon"></span> 
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                    <a class="nav-link" href="#">Features</a>
-                    </li>
-                    <li class="nav-item">
-                    <a class="nav-link" href="#">Pricing</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link active" href="/index.html">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Features</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Pricing</a></li>
                     <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Menu desplegable
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#inicio">Inicio</a></li>
-                        <li><a class="dropdown-item" href="#servicio">Servicio</a></li>
-                        <li><a class="dropdown-item" href="#contacto">Contacto</a></li>
-                    </ul>
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Menu desplegable</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/html/formulario.html">Formulario</a></li>
+                            <li><a class="dropdown-item" href="#servicio">Calculadora</a></li>
+                            <li><a class="dropdown-item" href="#contacto">alguna monda</a></li>
+                        </ul>
                     </li>
                 </ul>
-                </div>
             </div>
-            </nav>
-   
-    <main>
-        
-        <div class="contenido">
-            
-                    <section id="inicio">
-
-                        <article>
-                        
-                            <h2>Inicio</h2>
-                            <p>acerca de nosotros</p>
-
-
-                        </article>
-                    </section>
-                    <section id="servicios">
-
-                        <article>
-                            <h2>Servicios</h2>
-                            <p>Ofrecemos soluciones digitales</p>
-
-                        </article>
-                    </section>
-                    <section id="contacto">
-
-                        <article>
-
-                        <h2>Contacto</h2>
-                        <p> Escribeme a sebatianvillaneda202@gmail.com</p>  
-                        </article>
-                        <!--agregamos una tarjeta-->
-                              
-                    </section>
         </div>
-                <aside>
-                    
-                    <h3>Conéctate con nosotros</h3>
-                <p>Síguenos en nuestras redes sociales para estar al día:</p>
+    </nav>
 
-                <div class="redes-sociales">
-                    <a href="https://www.facebook.com/" target="_blank">
-                        <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" width="32">
-                    </a>
-                    <a href="https://www.instagram.com/" target="_blank">
-                        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" width="32">
-                    </a>
-                    <a href="https://x.com/" target="_blank">
-                        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968958.png" alt="X (ex-Twitter)" width="32">
-                    </a>
-                    <a href="https://www.linkedin.com/" target="_blank">
-                        <img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn" width="32">
-                    </a>
-                    <a href="https://www.youtube.com/" target="_blank">
-                        <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube" width="32">
-                    </a>
-                 </div>
+    <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active" data-bs-interval="10000">
+                <img src="/images/planetaTierra.jpg" class="d-block w-100" alt="...">
+            </div>
+            <div class="carousel-item" data-bs-interval="2000">
+                <img src="/images/tigreFondoNegro.jpeg" class="d-block w-100" alt="...">
+            </div>
+            <div class="carousel-item">
+                <img src="/images/Favicon.ico" class="d-block w-100" alt="...">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+    </div>
+
+    <main>
+        <div class="contenido">
+            <section id="inicio">
+                <article>
+                    <h2>Inicio</h2>
+                    <p>Acerca de nosotros</p>
+                </article>
+            </section>
+
+            <section id="servicios">
+                <article>
+                    <h2>Servicios</h2>
+                    <p>Ofrecemos soluciones digitales</p>
+                </article>
+            </section>
+
+            <section id="contacto">
+                <article>
+                    <h2>Contacto</h2>
+                    <p>Escríbeme a sebatianvillaneda202@gmail.com</p>
+                </article>
+
+                <!-- Contenedor de tarjetas -->
+                <div class="card-container">
+                    <!-- Tarjeta 1 -->
+                    <div class="card" style="width: 18rem;">
+                        <img src="/images/Favicon.ico" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">Once Caldas</h5>
+                            <p class="card-text">Primera tarjeta de ejemplo.</p>
+                            <a href="#" class="card-link">Enlace 1</a>
+                            <a href="#" class="card-link">Enlace 2</a>
+                        </div>
+                    </div>
+
+                    <!-- Tarjeta 2 -->
+                    <div class="card" style="width: 18rem;">
+                        <img src="/images/Favicon.ico" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">Otra Tarjeta</h5>
+                            <p class="card-text">Segunda tarjeta de ejemplo.</p>
+                            <a href="#" class="card-link">Enlace A</a>
+                            <a href="#" class="card-link">Enlace B</a>
+                        </div>
+                    </div>
                 </div>
-                </aside>
-     
+            </section>
+        </div>
+
+        <aside>
+            <h3>Conéctate con nosotros</h3>
+            <p>Síguenos en nuestras redes sociales para estar al día:</p>
+            <div class="redes-sociales">
+                <a href="https://www.facebook.com/" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" width="32">
+                </a>
+                <a href="https://www.instagram.com/" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" width="32">
+                </a>
+                <a href="https://x.com/" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/5968/5968958.png" alt="X (ex-Twitter)" width="32">
+                </a>
+                <a href="https://www.linkedin.com/" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn" width="32">
+                </a>
+                <a href="https://www.youtube.com/" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube" width="32">
+                </a>
+            </div>
+        </aside>
     </main>
-    <footer class="footer"><p>&copy; 2025 TODOS LOS DERECHOS RESERVADOS</p></footer>
+
+    <footer class="footer">
+        <p>&copy; 2025 TODOS LOS DERECHOS RESERVADOS</p>
+    </footer>
 </body>
 </html>
