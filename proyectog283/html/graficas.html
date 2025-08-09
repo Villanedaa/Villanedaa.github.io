@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grficas Eolica</title>
+    <link rel="icon" href="../img/favicon1.ico">
+
+    <!-- estilos css -->
+    <link rel="stylesheet" href="../css/Styles.css">
+    <link rel="stylesheet" href="../materialize/css/materialize.css">
+    <link rel="stylesheet" href="../materialize/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+</head>
+
+<body>
+    <header>
+        <div class="glitch-wrapper">
+            <div class="glitch" data-glitch="transicion Energetica">Graficas energia Eolioca</div>
+        </div>
+    </header>
+    <nav id="nav-menu">
+        <div class="nav-wrapper">
+            <a href="#!" class="brand-logo"><img src="../img/logo.png" alt=""></a>
+            <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+            <ul class="right hide-on-small-only">
+                <li><a href="../index.html"><i class="material-icons left">view_module</i>Inicio</a></li>
+                <li><a href="../html/eolica.html"><i class="material-icons left">contacts</i>Historia</a></li>
+                <li><a href="../html/graficas.html"><i class="material-icons left">graphic_eq</i>Graficas</a></li>
+                <li><a href="forms.html"><i class="material-icons left">dialpad</i>Consultar Consumo</a></li>
+                <!-- <li><a href="sass.html"><i class="material-icons left">search</i>Buscar</a></li> -->
+
+            </ul>
+        </div>
+    </nav>
+    <ul class="sidenav" id="mobile-demo"
+        style="background: linear-gradient(90deg, rgb(221, 224, 224) 0%, rgb(251, 253, 252) 50%, rgb(248, 240, 171) 100%)">
+        <li><a href="../index.html"><i class="material-icons left">view_module</i>Inicio</a></li>
+        <li><a href="../html/eolica.html"><i class="material-icons left">contacts</i>Historia</a></li>
+        <li><a href="../html/graficas.html"><i class="material-icons left">graphic_eq</i>Graficas</a></li>
+        <li><a href="forms.html"><i class="material-icons left">dialpad</i>Consultar Consumo</a></li>
+        <!-- <li><a href="sass.html"><i class="material-icons left">search</i>Buscar</a></li> -->
+        <div style="background: cover;">
+            <img src="../img/sidva.png" alt="" style="opacity: 0.5;">
+        </div>
+    </ul>
+    <br>
+    <div style="width: 90%; margin: auto; ">
+        <h3 style="text-align: left;">objetivo: </h3>
+        <p style="text-align: justify;">Actualmente, Colombia no tiene una tabla oficial de consumo anual de energía
+            eólica desde 2010 hasta 2024, y esto
+            se debe a una razón clave: la energía eólica no ha sido parte significativa del sistema energético nacional
+            hasta años recientes.
+
+            A continuación, te presento una tabla con la información disponible y estimada hasta 2024, basada en datos
+            oficiales del Ministerio de Minas y Energía, el UPME (Unidad de Planeación Minero Energética),
+            y el Sistema de Información de Generación Eléctrica (SIGER) de XM</p>
+    </div>
+    <main class="col s2 m2" style="display: flex; gap: 20px;">
+
+        <section id="graficas_anos" style="width: 50%; height: 30%;">
+            <h5>Grafica tipo bar</h5>
+            <canvas id="graficbar" name="graficbar" width="30" height="20"></canvas>
+            <h5>Grafica tipo bubble </h5>
+            <canvas id="graficbubble" name="graficbubble" width="30" height="27"></canvas>
+            <h5>Grafica tipo doughnut </h5>
+            <canvas id="graficdoughnut" name="graficdoughnut" width="20" height="10"></canvas>
+        </section>
+        <section id="graficas_anos" style="width: 50%; height: 30%;">
+            <h5>Grafica tipo line </h5>
+            <canvas id="graficline" name="graficline" width="30" height="17"></canvas>
+            <h5>Grafica tipo polarArea </h5>
+            <canvas id="graficpolarArea" name="graficpolarArea" width="20" height="10"></canvas>
+            <h5>Grafica tipo radar </h5>
+            <canvas id="graficradar" name="graficradar" width="30" height="20"></canvas>
+        </section>
+
+    </main>
+    <br>
+    <footer>
+        <p>Copy 2025 - Bootcamp - Todos los derechos reservados</p>
+    </footer>
+
+
+    <script src="../materialize/js/materialize.js"></script>
+    <script src="../materialize/js/materialize.min.js"></script>
+    <script src="../js/componentesMaterialize.js"></script>
+    <script src="../js/jquery-3.7.1.min.js"></script>
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../script/graficas.js"></script>
+    <script src="../script/script.js"></script>
+
+</body>
+
+</html>
