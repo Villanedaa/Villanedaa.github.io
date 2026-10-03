@@ -50,7 +50,7 @@ $('#sv').onclick=()=>{const o=form();
 $('#nw').onclick=()=>load(null);
 $('#dl').onclick=()=>{if(confirm('¿Seguro que desea eliminar esta operación? No se puede deshacer.')){removeOp(cur);load(null);tab(1)}};
 // ---------- filtros / reporte
-const FL=[['d1','Fecha desde','date'],['d2','Fecha hasta','date'],['proc','Procedencia'],['dueno','Dueño de la madera'],['placa','Placa del camión'],['nA','Aserrador'],['nB','Bolillero'],['nR','Arriero'],['est','Estado de los pagos','sel','todos,pendiente,parcial,cancelado'],['ant','Anticipos','sel','todos,con anticipos,sin anticipos'],['can','Cancelaciones','sel','todos,con cancelaciones,sin cancelaciones']];
+const FL=[['d1','Fecha desde','date'],['d2','Fecha hasta','date'],['proc','Procedencia'],['dueno','Dueño de la madera'],['placa','Placa del camión'],['nA','Aserrador'],['nB','Bolillero'],['nR','Arriero'],['est','Estado de los pagos','sel','todos,con saldo pendiente,pendiente,parcial,cancelado'],['ant','Anticipos','sel','todos,con anticipos,sin anticipos'],['can','Cancelaciones','sel','todos,con cancelaciones,sin cancelaciones']];
 $('#flt').innerHTML=FL.map(([k,l,t,o])=>t=='sel'?`<label>${l}<select id="f_${k}">${o.split(',').map(v=>`<option>${v}</option>`).join('')}</select></label>`:`<label>${l}<input id="f_${k}" type="${t||'text'}"></label>`).join('');
 $('#flt').addEventListener('input',render);
 $('#clr').onclick=()=>{FL.forEach(([k,,t])=>$('#f_'+k).selectedIndex!==undefined&&t=='sel'?$('#f_'+k).selectedIndex=0:$('#f_'+k).value='');render()};
@@ -59,7 +59,7 @@ function rows(){const v=k=>$('#f_'+k).value.trim();
  return db.map(o=>({o,c:calc(o)})).filter(({o,c})=>{
   if(v('d1')&&o.fecha<v('d1'))return false;if(v('d2')&&o.fecha>v('d2'))return false;
   for(const k of['proc','dueno','placa','nA','nB','nR'])if(v(k)&&!has(o[k],v(k)))return false;
-  if(v('est')!='todos'&&![c.stD,c.eA,c.eB,c.eR].some((e,i)=>e==v('est')&&[c.vd,c.tA,c.tB,c.tR][i]>0))return false;
+  if(v('est')=='con saldo pendiente'?c.saldo<=0:v('est')!='todos'&&![c.stD,c.eA,c.eB,c.eR].some((e,i)=>e==v('est')&&[c.vd,c.tA,c.tB,c.tR][i]>0))return false;
   if(v('ant')=='con anticipos'&&c.ant<=0)return false;if(v('ant')=='sin anticipos'&&c.ant>0)return false;
   if(v('can')=='con cancelaciones'&&c.can<=0)return false;if(v('can')=='sin cancelaciones'&&c.can>0)return false;
   return true}).sort((a,b)=>(b.o.fecha||'').localeCompare(a.o.fecha||''))}
@@ -72,7 +72,7 @@ function render(){const R=rows(),T={q:0,vd:0,cargue:0,tA:0,tB:0,tR:0,costo:0,pag
  (R.length?R.map(({o,c})=>`<tr class="cl" data-id="${o.id}"><td>${o.fecha||''}</td><td>${o.proc||''}</td><td>${o.tipo||''}</td><td class="r">${o.cant||0} ${o.uni=='pulgada'?'pulg.':'ton.'}</td><td>${o.dueno||''}</td><td>${o.placa||''}</td><td class="r">${fmt(c.vd)}</td><td class="r">${fmt(c.cargue)}</td><td class="r">${fmt(c.tA)}</td><td class="r">${fmt(c.tB)}</td><td class="r">${fmt(c.tR)}</td><td class="r"><b>${fmt(c.costo)}</b></td><td class="r">${fmt(c.pagado)}</td><td class="r">${fmt(c.saldo)}</td><td>${bd(c.stD)}</td><td>${bd(c.eA)}</td><td>${bd(c.eB)}</td><td>${bd(c.eR)}</td></tr>`).join(''):`<tr><td colspan="18" class="empty">Todavía no hay operaciones que mostrar.<br>Toque «➕ Nueva operación» para registrar la primera.</td></tr>`)+
  `</tbody><tfoot><tr><td colspan="6">TOTALES</td><td class="r">${fmt(T.vd)}</td><td class="r">${fmt(T.cargue)}</td><td class="r">${fmt(T.tA)}</td><td class="r">${fmt(T.tB)}</td><td class="r">${fmt(T.tR)}</td><td class="r">${fmt(T.costo)}</td><td class="r">${fmt(T.pagado)}</td><td class="r">${fmt(T.saldo)}</td><td colspan="4"></td></tr></tfoot>`;
  $('#tb').querySelectorAll('tbody tr.cl').forEach(tr=>[...tr.children].forEach((td,i)=>td.dataset.label=H[i]));
- $('#cnt').textContent=db.length+' operaciones almacenadas.';dash()}
+ $('#cnt').textContent=db.length+' operaciones almacenadas.';dash();ppl()}
 $('#tb').onclick=e=>{const r=e.target.closest('tr.cl');if(!r)return;load(db.find(x=>x.id==r.dataset.id));tab(2)};
 // ---------- exportar
 const dl=(name,txt,type)=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type}));a.download=name;a.click()};
@@ -106,12 +106,20 @@ function dash(){
  $('#pp').innerHTML='<thead><tr><th>Persona</th><th>Rol</th><th class="r">Saldo</th><th>Estado</th></tr></thead><tbody>'+(pe.slice(0,6).map(p=>`<tr class="cl" data-id="${p.id}"><td>${p.n}</td><td>${p.r}</td><td class="r">${fmt(p.v)}</td><td>${bd(p.e)}</td></tr>`).join('')||'<tr><td colspan="4" class="empty">¡Sin pagos pendientes! 🎉</td></tr>')+'</tbody>';
  $('#lo').innerHTML=all.slice().sort((a,b)=>(b.o.fecha||'').localeCompare(a.o.fecha||'')).slice(0,5).map(({o,c})=>`<div class="li" data-id="${o.id}"><div><b>${o.dueno||'-'}</b><small>${o.proc||''} · ${o.fecha||''}</small></div><div class="r"><b>${fmt(c.costo)}</b><small>Saldo ${fmt(c.saldo)}</small></div></div>`).join('')||'<p class="empty">Aún no hay operaciones. Toque «➕ Nueva operación».</p>'}
 // ---------- pestañas
-const TT={4:'Inicio',1:'Operaciones',2:'Operación',3:'Respaldo'};
-function tab(i){[1,2,3,4].forEach(k=>{$('#v'+k).classList.toggle('hide',k!=i);$('#t'+k).classList.toggle('on',k==i)});$('#pt').textContent=TT[i];render();scrollTo(0,0)}
-[1,2,3,4].forEach(k=>$('#t'+k).onclick=()=>{if(k==2)load(null);tab(k)});
+const TT={4:'Inicio',1:'Reportes y operaciones',2:'Operación',3:'Respaldo y datos',6:'Personas y proveedores',5:'Pagos pendientes'};
+function tab(i,al){const nv=al||i;[1,2,3,4,6].forEach(k=>$('#v'+k).classList.toggle('hide',k!=i));[1,2,3,4,5,6].forEach(k=>$('#t'+k).classList.toggle('on',k==nv));$('#pt').textContent=TT[nv];render();scrollTo(0,0)}
+function ppl(){const m={},q=($('#pq').value||'').toLowerCase();
+ db.forEach(o=>{const c=calc(o);[['Dueño','dueno','vd','pagD','pendD'],['Aserrador','nA','tA','pgA','sA'],['Bolillero','nB','tB','pgB','sB'],['Arriero','nR','tR','pgR','sR']].forEach(([r,n,t,p,s])=>{const nm=(o[n]||'').trim();if(!nm)return;const k=r+'|'+nm.toLowerCase(),e=m[k]=m[k]||{nm,r,n:0,t:0,p:0,s:0};e.n++;e.t+=c[t];e.p+=c[p];e.s+=c[s]})});
+ const L=Object.values(m).filter(e=>e.nm.toLowerCase().includes(q)).sort((a,b)=>b.s-a.s);
+ $('#pt2').innerHTML='<thead><tr><th>Nombre</th><th>Rol</th><th class="r">Operaciones</th><th class="r">Total</th><th class="r">Pagado</th><th class="r">Saldo</th><th>Estado</th></tr></thead><tbody>'+(L.map(e=>`<tr><td><b>${e.nm}</b></td><td>${e.r}</td><td class="r">${e.n}</td><td class="r">${fmt(e.t)}</td><td class="r">${fmt(e.p)}</td><td class="r">${fmt(e.s)}</td><td>${bd(stt(e.t,e.p))}</td></tr>`).join('')||'<tr><td colspan="7" class="empty">No hay personas registradas todavía.</td></tr>')+'</tbody>'}
+$('#pq').oninput=ppl;
+const est=v=>$('#f_est').value=v;
+$('#t4').onclick=()=>tab(4);$('#t2').onclick=()=>{load(null);tab(2)};$('#t3').onclick=()=>tab(3);$('#t6').onclick=()=>tab(6);
+$('#t1').onclick=()=>{if($('#f_est').value=='con saldo pendiente')est('todos');tab(1)};
+$('#t5').onclick=()=>{est('con saldo pendiente');tab(1,5)};
 $('#nb').onclick=()=>{load(null);tab(2)};$('#xb').onclick=()=>$('#csv').click();
 $('#v4').onclick=e=>{const r=e.target.closest('[data-id]');if(r){load(db.find(x=>x.id==r.dataset.id));tab(2)}};
-const gate=ok=>{$('.side').classList.toggle('hide',!ok);$('.top').classList.toggle('hide',!ok);$('#v0').classList.toggle('hide',ok);if(ok)tab(4);else[1,2,3,4].forEach(k=>$('#v'+k).classList.add('hide'))};
+const gate=ok=>{$('.side').classList.toggle('hide',!ok);$('.top').classList.toggle('hide',!ok);$('#v0').classList.toggle('hide',ok);if(ok)tab(4);else[1,2,3,4,6].forEach(k=>$('#v'+k).classList.add('hide'))};
 async function initCloud(){
  const B='https://www.gstatic.com/firebasejs/10.12.2/';
  const [A,Au,Fs]=await Promise.all([import(B+'firebase-app.js'),import(B+'firebase-auth.js'),import(B+'firebase-firestore.js')]);

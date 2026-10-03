@@ -62,3 +62,12 @@ td.r,th.r{text-align:right}tr.cl:hover{background:var(--ac2);cursor:pointer}tfoo
  #tb td::before{content:attr(data-label);color:var(--mu);font-size:13px}
  .bar .row{margin:0;width:100%}.bar .row button{flex:1}}
 @media print{.side,.top,.f,.row,.bar,.intro{display:none}body{background:#fff}}
+
+.ic{width:19px;height:19px;flex-shrink:0}
+nav button{display:flex;align-items:center;gap:12px;font-size:15px}
+nav button.on{background:#ffffff1f;box-shadow:inset 3px 0 0 var(--gr)}
+.ws{display:flex;align-items:center;gap:10px;background:#ffffff14;border-radius:10px;padding:9px 10px;margin:0 0 14px;font-size:13px;color:#fff;overflow:hidden}
+.ws span:last-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.av2{width:26px;height:26px;border-radius:50%;background:#ffffff26;display:grid;place-items:center;flex-shrink:0}
+.brand svg{width:34px;height:34px}
+@media(max-width:860px){nav{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}nav button{flex-direction:column;gap:3px;font-size:12px;padding:8px 4px;text-align:center}.ws{margin-bottom:8px}.sf{margin-top:6px}}
