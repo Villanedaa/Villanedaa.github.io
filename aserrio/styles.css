@@ -76,3 +76,5 @@ td.r,th.r{text-align:right}tr.cl:hover{background:var(--sky);cursor:pointer}tfoo
  #tb td::before{content:attr(data-label);color:var(--mu);font-size:13px}
  .bar .row{margin:0;width:100%}.bar .row button{flex:1}}
 @media print{.side,.top,.f,.row,.bar,.intro{display:none}body{background:#fff}}
+
+@media(max-width:860px){nav{grid-template-columns:repeat(4,1fr)}#vt,#vt tbody{display:block}#vt thead,#vt tfoot{display:none}#vt tr.cl{display:block;border:1px solid var(--bd);border-radius:10px;margin-bottom:10px;padding:6px 10px}#vt td{display:flex;justify-content:space-between;gap:10px;border:0;padding:4px 0;white-space:normal}#vt td::before{content:attr(data-label);color:var(--mu);font-size:13px}}
