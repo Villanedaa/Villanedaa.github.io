@@ -7,13 +7,21 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<header><h1>🪵 Control de Madera <small>compra y movilización</small></h1>
-<nav><button id="t1" class="on">📋 Operaciones</button><button id="t2">➕ Nueva operación</button><button id="t3">💾 Respaldo</button><span id="us" style="margin-left:10px;font-size:12px"></span><button id="so" class="hide">Salir</button></nav></header>
+<div class="app">
+<aside class="side"><div class="brand"><span>🪵</span><div>MaderaFlow<small>Control de compras</small></div></div>
+<nav><button id="t4" class="on">🏠 Inicio</button><button id="t1">📋 Operaciones</button><button id="t2">➕ Nueva operación</button><button id="t3">💾 Respaldo</button></nav>
+<div class="sf"><span id="us"></span><button id="so" class="hide">Cerrar sesión</button></div></aside>
+<div class="mw"><div class="top"><h1 id="pt">Inicio</h1><div class="row"><button class="b s" id="xb">📥 Exportar</button><button class="b" id="nb">➕ Nueva operación</button></div></div>
 <main>
+<section id="v4"><div class="hello"><div class="av">👷</div><div><b>Hola, bienvenido 👋</b><br><span class="note" id="dt"></span></div></div>
+<div class="k4" id="k4"></div>
+<div class="card"><h2>Flujo de costos (últimos 6 meses)</h2><div id="ch"></div></div>
+<div class="two"><div class="card"><h2>Pagos pendientes</h2><div class="tw"><table id="pp"></table></div></div>
+<div class="card"><h2>Últimas operaciones</h2><div id="lo"></div></div></div></section>
 <section id="v0" class="hide"><div class="card" style="max-width:380px;margin:40px auto"><h2>Iniciar sesión</h2>
  <div class="g" style="grid-template-columns:1fr"><label>Correo<input id="em" type="email" autocomplete="username"></label><label>Contraseña<input id="pw" type="password" autocomplete="current-password"></label></div>
  <div class="row"><button class="b" id="lg">Ingresar</button></div><p class="note" id="lerr" style="color:var(--er)"></p></div></section>
-<section id="v1">
+<section id="v1" class="hide">
  <p class="intro">Aquí ve todas sus operaciones. <b>Toque una fila para editarla</b> o use «➕ Nueva operación» para registrar una compra.</p>
  <details class="card f"><summary>🔎 Buscar y filtrar</summary><div class="g" id="flt"></div>
   <div class="row"><button class="b s" id="clr">Limpiar filtros</button><button class="b" id="csv">📥 Exportar a Excel (CSV)</button><button class="b s" onclick="print()">🖨 Imprimir</button></div></details>
@@ -30,7 +38,7 @@
  <p class="note">Los datos se guardan automáticamente en este navegador (localStorage). Para no perderlos al borrar el caché o cambiar de equipo, descargue respaldos periódicos.</p>
  <div class="row"><button class="b" id="ex">💾 Descargar respaldo (.json)</button><label style="justify-content:center"><input type="file" id="im" accept=".json"></label></div>
  <p class="note" id="cnt"></p></div></section>
-</main>
+</main></div></div>
 <div id="toast"></div>
 <script src="config.js"></script>
 <script src="app.js"></script>

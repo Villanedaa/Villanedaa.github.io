@@ -72,7 +72,7 @@ function render(){const R=rows(),T={q:0,vd:0,cargue:0,tA:0,tB:0,tR:0,costo:0,pag
  (R.length?R.map(({o,c})=>`<tr class="cl" data-id="${o.id}"><td>${o.fecha||''}</td><td>${o.proc||''}</td><td>${o.tipo||''}</td><td class="r">${o.cant||0} ${o.uni=='pulgada'?'pulg.':'ton.'}</td><td>${o.dueno||''}</td><td>${o.placa||''}</td><td class="r">${fmt(c.vd)}</td><td class="r">${fmt(c.cargue)}</td><td class="r">${fmt(c.tA)}</td><td class="r">${fmt(c.tB)}</td><td class="r">${fmt(c.tR)}</td><td class="r"><b>${fmt(c.costo)}</b></td><td class="r">${fmt(c.pagado)}</td><td class="r">${fmt(c.saldo)}</td><td>${bd(c.stD)}</td><td>${bd(c.eA)}</td><td>${bd(c.eB)}</td><td>${bd(c.eR)}</td></tr>`).join(''):`<tr><td colspan="18" class="empty">Todavía no hay operaciones que mostrar.<br>Toque «➕ Nueva operación» para registrar la primera.</td></tr>`)+
  `</tbody><tfoot><tr><td colspan="6">TOTALES</td><td class="r">${fmt(T.vd)}</td><td class="r">${fmt(T.cargue)}</td><td class="r">${fmt(T.tA)}</td><td class="r">${fmt(T.tB)}</td><td class="r">${fmt(T.tR)}</td><td class="r">${fmt(T.costo)}</td><td class="r">${fmt(T.pagado)}</td><td class="r">${fmt(T.saldo)}</td><td colspan="4"></td></tr></tfoot>`;
  $('#tb').querySelectorAll('tbody tr.cl').forEach(tr=>[...tr.children].forEach((td,i)=>td.dataset.label=H[i]));
- $('#cnt').textContent=db.length+' operaciones almacenadas.'}
+ $('#cnt').textContent=db.length+' operaciones almacenadas.';dash()}
 $('#tb').onclick=e=>{const r=e.target.closest('tr.cl');if(!r)return;load(db.find(x=>x.id==r.dataset.id));tab(2)};
 // ---------- exportar
 const dl=(name,txt,type)=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type}));a.download=name;a.click()};
@@ -86,10 +86,32 @@ $('#im').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileRea
   if(confirm('Se importarán '+d.length+' operaciones. Aceptar = combinar con las existentes; (se reemplazan las de igual ID).')){
    const m=new Map(db.map(x=>[x.id,x]));d.forEach(x=>m.set(x.id,x));db=[...m.values()];save();if(cloud)db.forEach(cloud.set);render();toast('✔ Importación completa')}}
   catch(_){alert('Archivo de respaldo no válido')}};r.readAsText(f);e.target.value=''};
+// ---------- panel de inicio
+const MES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+const sh=v=>v>=1e6?(v/1e6).toFixed(1)+' M':v>=1e3?Math.round(v/1e3)+' mil':Math.round(v);
+function spark(v,c){const w=120,h=34,m=Math.max(...v,1),p=v.map((y,i)=>(i*w/(v.length-1))+','+(h-3-y/m*(h-8))).join(' ');
+ return `<svg class="sp" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polygon points="0,${h} ${p} ${w},${h}" fill="${c}" opacity=".12"/><polyline points="${p}" fill="none" stroke="${c}" stroke-width="2"/></svg>`}
+function dash(){
+ const all=db.map(o=>({o,c:calc(o)})),T=k=>all.reduce((a,x)=>a+x.c[k],0),now=new Date(),ms=[];
+ for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);ms.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'))}
+ const by=k=>ms.map(m=>all.filter(x=>(x.o.fecha||'').slice(0,7)==m).reduce((a,x)=>a+x.c[k],0));
+ $('#dt').textContent=now.toLocaleDateString('es-CO',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+ $('#k4').innerHTML=[['1. Costo total','costo','#2e9e6b'],['2. Total pagado','pagado','#3b6fd4'],['3. Saldo pendiente','saldo','#d9534f'],['4. Compra de madera','vd','#8a6d3b']].map(([l,k,col])=>{
+  const s=by(k),a=s[5],b=s[4],p=b?(a-b)/b*100:null;
+  return `<div class="kc"><small>${l}</small><b>${fmt(T(k))}</b>${p===null?'<i></i>':`<i class="${p>=0?'up':'dn'}">${p>=0?'▲':'▼'} ${Math.abs(p).toFixed(1)}% vs mes anterior</i>`}${spark(s,col)}</div>`}).join('');
+ const A=by('costo'),B=by('pagado'),W=700,H=240,L=62,Bm=30,Tp=12,mx=Math.max(...A,...B,1),X=i=>L+i*(W-L-14)/5,Y=v=>Tp+(H-Tp-Bm)*(1-v/mx),pts=s=>s.map((v,i)=>X(i)+','+Y(v)).join(' ');
+ $('#ch').innerHTML=`<svg viewBox="0 0 ${W} ${H}">${[0,1,2,3,4].map(i=>{const v=mx*i/4;return `<line x1="${L}" x2="${W-14}" y1="${Y(v)}" y2="${Y(v)}" class="gl"/><text x="${L-8}" y="${Y(v)+4}" text-anchor="end">${sh(v)}</text>`}).join('')}${ms.map((m,i)=>`<text x="${X(i)}" y="${H-8}" text-anchor="middle">${MES[+m.slice(5)-1]}</text>`).join('')}${[[A,'#2e9e6b'],[B,'#3b6fd4']].map(([s,c])=>`<polygon points="${X(0)},${Y(0)} ${pts(s)} ${X(5)},${Y(0)}" fill="${c}" opacity=".1"/><polyline points="${pts(s)}" fill="none" stroke="${c}" stroke-width="2.5"/>${s.map((v,i)=>`<circle cx="${X(i)}" cy="${Y(v)}" r="4" fill="${c}"/>`).join('')}`).join('')}</svg><div class="lg"><span><i style="background:#2e9e6b"></i>Costo total</span><span><i style="background:#3b6fd4"></i>Pagado</span></div>`;
+ const pe=[];all.forEach(({o,c})=>[['Dueño','dueno','pendD','stD'],['Aserrador','nA','sA','eA'],['Bolillero','nB','sB','eB'],['Arriero','nR','sR','eR']].forEach(([r,n,s,e])=>{if(c[s]>0&&o[n])pe.push({id:o.id,r,n:o[n],v:c[s],e:c[e]})}));
+ pe.sort((a,b)=>b.v-a.v);
+ $('#pp').innerHTML='<thead><tr><th>Persona</th><th>Rol</th><th class="r">Saldo</th><th>Estado</th></tr></thead><tbody>'+(pe.slice(0,6).map(p=>`<tr class="cl" data-id="${p.id}"><td>${p.n}</td><td>${p.r}</td><td class="r">${fmt(p.v)}</td><td>${bd(p.e)}</td></tr>`).join('')||'<tr><td colspan="4" class="empty">¡Sin pagos pendientes! 🎉</td></tr>')+'</tbody>';
+ $('#lo').innerHTML=all.slice().sort((a,b)=>(b.o.fecha||'').localeCompare(a.o.fecha||'')).slice(0,5).map(({o,c})=>`<div class="li" data-id="${o.id}"><div><b>${o.dueno||'-'}</b><small>${o.proc||''} · ${o.fecha||''}</small></div><div class="r"><b>${fmt(c.costo)}</b><small>Saldo ${fmt(c.saldo)}</small></div></div>`).join('')||'<p class="empty">Aún no hay operaciones. Toque «➕ Nueva operación».</p>'}
 // ---------- pestañas
-function tab(i){[1,2,3].forEach(k=>{$('#v'+k).classList.toggle('hide',k!=i);$('#t'+k).classList.toggle('on',k==i)});if(i==1)render();if(i==3)render();scrollTo(0,0)}
-[1,2,3].forEach(k=>$('#t'+k).onclick=()=>{if(k==2)load(null);tab(k)});
-const gate=ok=>{$('nav').classList.toggle('hide',!ok);$('#v0').classList.toggle('hide',ok);if(ok)tab(1);else[1,2,3].forEach(k=>$('#v'+k).classList.add('hide'))};
+const TT={4:'Inicio',1:'Operaciones',2:'Operación',3:'Respaldo'};
+function tab(i){[1,2,3,4].forEach(k=>{$('#v'+k).classList.toggle('hide',k!=i);$('#t'+k).classList.toggle('on',k==i)});$('#pt').textContent=TT[i];render();scrollTo(0,0)}
+[1,2,3,4].forEach(k=>$('#t'+k).onclick=()=>{if(k==2)load(null);tab(k)});
+$('#nb').onclick=()=>{load(null);tab(2)};$('#xb').onclick=()=>$('#csv').click();
+$('#v4').onclick=e=>{const r=e.target.closest('[data-id]');if(r){load(db.find(x=>x.id==r.dataset.id));tab(2)}};
+const gate=ok=>{$('.side').classList.toggle('hide',!ok);$('.top').classList.toggle('hide',!ok);$('#v0').classList.toggle('hide',ok);if(ok)tab(4);else[1,2,3,4].forEach(k=>$('#v'+k).classList.add('hide'))};
 async function initCloud(){
  const B='https://www.gstatic.com/firebasejs/10.12.2/';
  const [A,Au,Fs]=await Promise.all([import(B+'firebase-app.js'),import(B+'firebase-auth.js'),import(B+'firebase-firestore.js')]);
@@ -108,4 +130,4 @@ async function initCloud(){
     if(pend.length&&confirm('Hay '+pend.length+' operaciones guardadas solo en este navegador. ¿Subirlas a la nube?')){pend.forEach(cloud.set);d=d.concat(pend)}}
    db=d;save();render()},err)})}
 if(FIREBASE_CONFIG.apiKey){load(null);gate(false);initCloud().catch(e=>{$('#lerr').textContent='No se pudo conectar con Firebase: '+e.message})}
-else{$('#us').textContent='Modo local (sin nube)';load(null);tab(1)}
+else{$('#us').textContent='Modo local (sin nube)';load(null);tab(4)}
