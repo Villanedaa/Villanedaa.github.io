@@ -211,7 +211,7 @@ async function initCloud(){
  const err=e=>alert('Error con la nube: '+e.message);
  const colV=Fs.collection(fs,'ventas'),colP=Fs.collection(fs,'prestamos');cloud={setP:o=>Fs.setDoc(Fs.doc(colP,String(o.id)),o).catch(err),delP:id=>Fs.deleteDoc(Fs.doc(colP,String(id))).catch(err),setV:o=>Fs.setDoc(Fs.doc(colV,String(o.id)),o).catch(err),delV:id=>Fs.deleteDoc(Fs.doc(colV,String(id))).catch(err),set:o=>Fs.setDoc(Fs.doc(col,String(o.id)),o).catch(err),del:id=>Fs.deleteDoc(Fs.doc(col,String(id))).catch(err)};
  const login=()=>Au.signInWithEmailAndPassword(auth,$('#em').value.trim(),$('#pw').value).then(()=>{$('#lerr').textContent='';$('#pw').value=''}).catch(()=>$('#lerr').textContent='Correo o contraseña incorrectos');
- $('#lg').onclick=login;$('#pw').onkeydown=e=>e.key=='Enter'&&login();
+ $('#lg').onclick=login;$('#pw').onkeydown=e=>{if(e.key=='Enter')login()};$('#em').onkeydown=e=>{if(e.key=='Enter')$('#pw').focus()};
  $('#so').onclick=()=>Au.signOut(auth);$('#so').classList.remove('hide');
  $('#rp').onclick=ev=>{ev.preventDefault();const e=$('#em').value.trim();if(!e){$('#lerr').textContent='Escriba su correo arriba y vuelva a tocar aquí';return}
   Au.sendPasswordResetEmail(auth,e).then(()=>$('#lerr').textContent='✔ Le enviamos un correo para cambiar la contraseña').catch(()=>$('#lerr').textContent='No se pudo enviar el correo. Revise que esté bien escrito.')};
