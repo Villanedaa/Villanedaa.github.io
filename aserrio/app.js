@@ -4,48 +4,64 @@ let db=[];try{db=JSON.parse(localStorage.getItem(K))||[]}catch(e){}
 const save=()=>{try{localStorage.setItem(K,JSON.stringify(db))}catch(e){alert('No se pudo guardar en el navegador')}};
 const P=[['A','4. Aserrador','Aserrador','trabajada'],['B','5. Bolillero','Bolillero','trabajada'],['R','6. Arriero','Arriero','transportada']];
 const S=[
-{t:'1. Información de la madera',f:[['fecha','Fecha de compra','date'],['proc','Procedencia'],['tipo','Tipo de madera'],['cant','Cantidad de madera','number'],['uni','Unidad de medida','sel','tonelada,pulgada'],['pton','Precio por tonelada','number'],['ppul','Precio por pulgada','number'],['vm','Valor total de la madera','calc']]},
-{t:'2. Información del camión',f:[['camion','Número / identificación'],['placa','Placa'],['cond','Propietario o conductor'],['cotero','Cotero (quien carga)'],['viajes','Cantidad de viajes','number'],['pviaje','Precio de cargue por viaje','number'],['cargue','Valor total del cargue','calc']]},
-{t:'3. Pago al dueño de la madera',f:[['dueno','Nombre del dueño'],['cantD','Cantidad comprada (vacía = la del paso 1)','number'],['precD','Precio pactado (vacío = precio del paso 1)','number'],['vd','Valor total de la madera','calc'],['tpago','Tipo de pago','sel','anticipo,pago parcial,cancelación'],['antD','Valor del anticipo','number'],['fantD','Fecha del anticipo','date'],['parD','Pago parcial','number'],['canD','Valor de la cancelación','number'],['fcanD','Fecha de cancelación','date'],['pendD','Saldo pendiente','calc'],['stD','Estado del pago','calc']]},
+{t:'1. Información de la madera',f:[['fecha','Fecha de compra','date'],['proc','Procedencia'],['tipo','Tipo de madera'],['cant','Cantidad de madera','number'],['uni','Unidad de medida','sel','tonelada,pulgada,m³'],['pton','Precio por tonelada','number'],['ppul','Precio por pulgada','number'],['pm3','Precio por m³','number'],['vm','Valor total de la madera','calc']]},
+{t:'2. Información del camión',f:[['camion','Número / identificación'],['placa','Placa'],['cond','Propietario o conductor'],['cotero','Cotero (quien carga)'],['pcF','Cargue pagado a la finca (por unidad de madera)','number'],['pcC','Cargue pagado al cotero (por unidad de madera)','number'],['viajes','Viajes del camión (cada viaje descuenta del anticipo)','list','➕ Agregar viaje'],['qTrans','Madera transportada (suma de viajes)','calc'],['cargueF','Cargue a la finca','calc'],['cargueC','Cargue al cotero','calc'],['cargue','Valor total del cargue','calc']]},
+{t:'3. Anticipo al dueño de la finca',f:[['dueno','Nombre del dueño de la finca'],['cantD','Cantidad comprada (la del paso 1)','calc'],['precD','Precio pactado por unidad (vacío = el del paso 1)','number'],['vd','Valor total de la madera','calc'],['antis','Anticipos entregados (agregue más si el anticipo está bajo)','list','➕ Agregar anticipo (inyectar dinero)'],['pagD','Total de anticipos','calc'],['valTrans','Descontado por los viajes','calc'],['saldoAnt','Saldo del anticipo (a favor / en contra)','calc'],['stD','Estado del anticipo','calc'],['mov','Movimientos del anticipo','led']]},
 ...P.map(([x,t,r,v])=>({t,f:[['n'+x,'Nombre del '+r.toLowerCase()],['c'+x,'Cantidad de madera '+v,'number'],['p'+x,'Precio pagado al '+r.toLowerCase(),'number'],['t'+x,'Valor total a pagar','calc'],['a'+x,'Anticipo','number'],['f'+x,'Pago final / cancelación','number'],['s'+x,'Saldo pendiente','calc'],['e'+x,'Estado del pago','calc']]}))];
+const UL={tonelada:'ton.',pulgada:'pulg.','m³':'m³'},today=()=>new Date().toISOString().slice(0,10);
 const stt=(tot,pag)=>tot<=0&&pag<=0?'pendiente':pag<=0?'pendiente':pag>=tot?'cancelado':'parcial';
 function calc(o){
- const up=o.uni=='pulgada'?n(o.ppul):n(o.pton),c={};
- c.vm=n(o.cant)*up;
- const cd=n(o.cantD)||n(o.cant),pd=n(o.precD)||up;c.vd=cd*pd;
- c.pagD=n(o.antD)+n(o.parD)+n(o.canD);c.pendD=c.vd-c.pagD;c.stD=stt(c.vd,c.pagD);
- c.cargue=n(o.viajes)*n(o.pviaje);
- let ant=n(o.antD),can=n(o.canD)+n(o.parD),costo=c.vd+c.cargue,sal=c.pendD;
+ const up=o.uni=='pulgada'?n(o.ppul):o.uni=='m³'?n(o.pm3):n(o.pton),c={};
+ c.vm=n(o.cant)*up;c.cantD=n(o.cant);
+ const pd=n(o.precD)||up,AN=o.antis||[],VJ=o.viajes||[];c.pd=pd;c.vd=n(o.cant)*pd;
+ c.qTrans=VJ.reduce((a,x)=>a+n(x.c),0);c.valTrans=c.qTrans*pd;
+ c.pagD=AN.reduce((a,x)=>a+n(x.v),0);c.saldoAnt=c.pagD-c.valTrans;c.pendD=Math.max(0,-c.saldoAnt);
+ c.stD=c.pagD<=0&&c.valTrans<=0?'':c.saldoAnt<0?'pendiente':c.saldoAnt<=c.pagD*.2?'parcial':'cancelado';
+ c.cargueF=c.qTrans*n(o.pcF);c.cargueC=c.qTrans*n(o.pcC);c.cargue=c.cargueF+c.cargueC;
+ c.mov=[...AN.map(x=>({f:x.f||'',t:'Anticipo recibido',v:n(x.v)})),...VJ.map(x=>({f:x.f||'',t:'Viaje de '+n(x.c)+' '+(UL[o.uni]||''),v:-n(x.c)*pd}))].filter(x=>x.v).sort((a,b)=>(a.f||'9').localeCompare(b.f||'9')||b.v-a.v);
+ let s=0;c.mov.forEach(x=>x.s=s+=x.v);
+ let ant=c.pagD,can=0,costo=c.vd+c.cargue,sal=c.pendD;
  P.forEach(([x])=>{const t=n(o['c'+x])*n(o['p'+x]),pg=n(o['a'+x])+n(o['f'+x]);
   c['t'+x]=t;c['pg'+x]=pg;c['s'+x]=t-pg;c['e'+x]=stt(t,pg);ant+=n(o['a'+x]);can+=n(o['f'+x]);costo+=t;sal+=t-pg});
  c.ant=ant;c.can=can;c.costo=costo;c.saldo=sal;c.pagado=c.pagD+c.cargue+c.pgA+c.pgB+c.pgR;
  c.cantRef=n(o.cant);return c}
-const ICON=['🌲','🚚','👤','🪚','🔨','🐴'],DESC=['Datos de la compra: de dónde viene, qué tipo es y cuánto vale.','Camión que movilizó la madera y lo pagado por cargarla.','Lo que se le debe y se le ha pagado al dueño de la madera.','Persona que asierra la madera y su pago.','Persona que trabaja los bolillos y su pago.','Persona que transporta la madera con animales y su pago.'];
+const ICON=['🌲','🚚','👤','🪚','🔨','🐴'],DESC=['Datos de la compra: de dónde viene, qué tipo es y cuánto vale.','Camión, viajes y cargue pagado a la finca y al cotero. El cargue se calcula por cantidad de madera.','El dueño recibe anticipos y cada viaje los va descontando. Si el anticipo baja, puede agregar más dinero.','Persona que asierra la madera y su pago.','Persona que trabaja los bolillos y su pago.','Persona que transporta la madera con animales y su pago.'];
 const money=new Set(['vm','vd','pendD','cargue','tA','tB','tR','sA','sB','sR']);
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2600)}
 const KV='madera_ventas_v1';let vt=[];try{vt=JSON.parse(localStorage.getItem(KV))||[]}catch(e){}
 const saveV=()=>{try{localStorage.setItem(KV,JSON.stringify(vt))}catch(e){}};
+const KP='madera_prestamos_v1';let pr=[];try{pr=JSON.parse(localStorage.getItem(KP))||[]}catch(e){}
+const savePr=()=>{try{localStorage.setItem(KP,JSON.stringify(pr))}catch(e){}};
 let cloud=null;
 function persist(o){const i=db.findIndex(x=>x.id==o.id);i>=0?db[i]=o:db.push(o);save();if(cloud)cloud.set(o)}
 function removeOp(id){db=db.filter(x=>x.id!=id);save();if(cloud)cloud.del(id)}
 // ---------- formulario
+const LF={antis:[['f','Fecha','date'],['v','Valor entregado','number']],viajes:[['f','Fecha del viaje','date'],['c','Cantidad de madera del viaje','number']]};
+const rowH=(k,r)=>`<div class="lr">${LF[k].map(([f,l,t])=>`<label class="lc"><small>${l}</small><input data-f="${f}" type="${t}" value="${r[f]??''}" ${t=='number'?'min="0" step="any" inputmode="decimal" placeholder="0"':''}></label>`).join('')}<span class="lv"></span><button type="button" class="x" title="Quitar">✕</button></div>`;
+const lst=k=>[...document.querySelectorAll('#l_'+k+' .lr')].map(d=>{const o={};d.querySelectorAll('input').forEach(i=>o[i.dataset.f]=i.value);return o});
+const setLst=(k,a)=>{$('#l_'+k).innerHTML=a.map(r=>rowH(k,r)).join('')};
+const LW=(k,l,b)=>`<div class="lw"><b>${l}</b><div id="l_${k}"></div><button type="button" class="b s" data-add="${k}">${b}</button></div>`;
+document.addEventListener('click',e=>{const a=e.target.closest('[data-add]');if(a){$('#l_'+a.dataset.add).insertAdjacentHTML('beforeend',rowH(a.dataset.add,{f:today()}));upd();return}
+ const x=e.target.closest('.lr .x');if(x){x.closest('.lr').remove();upd()}});
 $('#secs').innerHTML=S.map((s,i)=>`<details class="card sec" open><summary>${ICON[i]} ${s.t}</summary><p class="hint">${DESC[i]}</p><div class="g">${s.f.map(([k,l,t,o])=>{
- if(t=='calc')return`<label>${l}<output id="o_${k}">-</output></label>`;
+ if(t=='calc')return`<label>${l}<output id="o_${k}">-</output></label>`;if(t=='list')return LW(k,l,o);if(t=='led')return`<div class="lw"><b>${l}</b><div id="o_${k}"></div></div>`;
  if(t=='sel')return`<label>${l}<select name="${k}">${o.split(',').map(v=>`<option>${v}</option>`).join('')}</select></label>`;
  return`<label>${l}<input name="${k}" type="${t||'text'}" ${t=='number'?'min="0" step="any" inputmode="decimal" placeholder="0"':''}></label>`}).join('')}</div></details>`).join('');
 let cur=null;
-const form=()=>{const o={};new FormData($('#fm')).forEach((v,k)=>o[k]=v);return o};
+const form=()=>{const o={};new FormData($('#fm')).forEach((v,k)=>o[k]=v);o.antis=lst('antis');o.viajes=lst('viajes');return o};
 function upd(){const o=form(),c=calc(o);
  Object.keys(c).forEach(k=>{const e=$('#o_'+k);if(!e)return;
-  e.innerHTML=k[0]=='e'||k=='stD'?bd(c[k]):fmt(c[k])});
- const R=[['Valor total de compra de la madera',c.vd],['Total pagado al dueño',c.pagD],['Total pendiente al dueño',c.pendD],['Total pagado por cargue',c.cargue],['Total pagado al aserrador',c.pgA],['Total pagado al bolillero',c.pgB],['Total pagado al arriero',c.pgR],['Total de anticipos',c.ant],['Total de cancelaciones/pagos finales',c.can],['COSTO TOTAL DE LA OPERACIÓN',c.costo],['SALDO PENDIENTE TOTAL',c.saldo]];
+  e.innerHTML=k=='stD'?bdo(c[k]):k[0]=='e'?bd(c[k]):k=='cantD'||k=='qTrans'?c[k]+' '+(UL[o.uni]||''):k=='saldoAnt'?fmt(Math.abs(c[k]))+(c[k]<0?' en contra (se le debe)':c[k]>0?' a favor':''):k=='mov'?'':fmt(c[k])});
+ $('#o_mov').innerHTML=c.mov.length?`<div class="tw"><table class="mv"><thead><tr><th>Fecha</th><th>Movimiento</th><th class="r">Valor</th><th class="r">Saldo del anticipo</th></tr></thead><tbody>${c.mov.map(x=>`<tr><td>${x.f}</td><td>${x.t}</td><td class="r ${x.v<0?'dn':'up'}">${fmt(x.v)}</td><td class="r"><b class="${x.s<0?'dn':''}">${fmt(x.s)}</b></td></tr>`).join('')}</tbody></table></div>`:'<p class="note">Aquí verá cómo baja el anticipo con cada viaje.</p>';
+ document.querySelectorAll('#l_viajes .lr').forEach(d=>{const q=n(d.querySelector('[data-f=c]').value);d.querySelector('.lv').textContent=q?'Descuenta '+fmt(q*c.pd)+' · cargue '+fmt(q*(n(o.pcF)+n(o.pcC))):''});
+ const R=[['Valor total de compra de la madera',c.vd],['Total de anticipos entregados',c.pagD],['Anticipo a favor (con el dueño)',Math.max(0,c.saldoAnt)],['Pendiente al dueño (anticipo en contra)',c.pendD],['Total pagado por cargue',c.cargue],['Total pagado al aserrador',c.pgA],['Total pagado al bolillero',c.pgB],['Total pagado al arriero',c.pgR],['Total de anticipos',c.ant],['Total de cancelaciones/pagos finales',c.can],['COSTO TOTAL DE LA OPERACIÓN',c.costo],['SALDO PENDIENTE TOTAL',c.saldo]];
  $('#bt').textContent=fmt(c.costo);$('#bs').textContent=fmt(c.saldo);
  $('#rs').innerHTML=R.map(([l,v])=>`<div><small>${l}</small><b>${fmt(v)}</b></div>`).join('')}
 $('#fm').addEventListener('input',upd);
 function load(r){cur=r?r.id:null;$('#fm').reset();
  const o=r||{fecha:new Date().toISOString().slice(0,10)};
  Object.keys(o).forEach(k=>{const e=$('#fm').elements[k];if(e&&k!='id')e.value=o[k]});
- $('#dl').classList.toggle('hide',!r);$('#ft').textContent=r?'✏️ Editando operación':'➕ Nueva compra';upd()}
+ setLst('antis',o.antis||[]);setLst('viajes',o.viajes||[]);$('#dl').classList.toggle('hide',!r);$('#ft').textContent=r?'✏️ Editando operación':'➕ Nueva compra';upd()}
 $('#sv').onclick=()=>{const o=form();
  if(!o.fecha||!o.dueno){toast('⚠ Falta la fecha de compra o el nombre del dueño de la madera');return}
  o.id=cur||Date.now();persist(o);toast('✔ Operación guardada');load(null);tab(1)};
@@ -65,28 +81,29 @@ function rows(){const v=k=>$('#f_'+k).value.trim();
   if(v('ant')=='con anticipos'&&c.ant<=0)return false;if(v('ant')=='sin anticipos'&&c.ant>0)return false;
   if(v('can')=='con cancelaciones'&&c.can<=0)return false;if(v('can')=='sin cancelaciones'&&c.can>0)return false;
   return true}).sort((a,b)=>(b.o.fecha||'').localeCompare(a.o.fecha||''))}
+const bdo=s=>s?`<span class="st ${s}">${{cancelado:'✔ Anticipo disponible',parcial:'⚠ Anticipo bajo',pendiente:'● En contra (se le debe)'}[s]}</span>`:'<span class="note">Sin movimientos</span>';
 const bd=s=>`<span class="st ${s}">${{cancelado:'✔ Pagado',parcial:'◐ Parcial',pendiente:'● Pendiente'}[s]}</span>`;
 function render(){const R=rows(),T={q:0,vd:0,cargue:0,tA:0,tB:0,tR:0,costo:0,pagado:0,saldo:0,pagD:0,pendD:0,ant:0,can:0};
  R.forEach(({o,c})=>{T.q+=c.cantRef;['vd','cargue','tA','tB','tR','costo','pagado','saldo','pagD','pendD','ant','can'].forEach(k=>T[k]+=c[k])});
  $('#kp').innerHTML=[['Operaciones',R.length,1],['Cantidad de madera',T.q.toLocaleString('es-CO'),1],['Compra de madera',T.vd],['Pagado al dueño',T.pagD],['Pendiente al dueño',T.pendD],['Cargue',T.cargue],['Aserrador',T.tA],['Bolillero',T.tB],['Arriero',T.tR],['Anticipos',T.ant],['Cancelaciones',T.can],['Total pagado',T.pagado],['Costo total',T.costo],['Saldo pendiente',T.saldo]].map(([l,v,r])=>`<div><small>${l}</small><b>${r?v:fmt(v)}</b></div>`).join('');
  const H=['Fecha','Procedencia','Tipo','Cantidad','Dueño','Placa','Compra','Cargue','Aserrador','Bolillero','Arriero','Costo total','Pagado','Saldo','Estado dueño','Aser.','Bol.','Arr.'];
  $('#tb').innerHTML=`<thead><tr>${H.map((h,i)=>`<th class="${i>2&&i!=4&&i!=5&&i<14?'r':''}">${h}</th>`).join('')}</tr></thead><tbody>`+
- (R.length?R.map(({o,c})=>`<tr class="cl" data-id="${o.id}"><td>${o.fecha||''}</td><td>${o.proc||''}</td><td>${o.tipo||''}</td><td class="r">${o.cant||0} ${o.uni=='pulgada'?'pulg.':'ton.'}</td><td>${o.dueno||''}</td><td>${o.placa||''}</td><td class="r">${fmt(c.vd)}</td><td class="r">${fmt(c.cargue)}</td><td class="r">${fmt(c.tA)}</td><td class="r">${fmt(c.tB)}</td><td class="r">${fmt(c.tR)}</td><td class="r"><b>${fmt(c.costo)}</b></td><td class="r">${fmt(c.pagado)}</td><td class="r">${fmt(c.saldo)}</td><td>${bd(c.stD)}</td><td>${bd(c.eA)}</td><td>${bd(c.eB)}</td><td>${bd(c.eR)}</td></tr>`).join(''):`<tr><td colspan="18" class="empty">Todavía no hay operaciones que mostrar.<br>Toque «➕ Nueva compra» para registrar la primera.</td></tr>`)+
+ (R.length?R.map(({o,c})=>`<tr class="cl" data-id="${o.id}"><td>${o.fecha||''}</td><td>${o.proc||''}</td><td>${o.tipo||''}</td><td class="r">${o.cant||0} ${UL[o.uni]||''}</td><td>${o.dueno||''}</td><td>${o.placa||''}</td><td class="r">${fmt(c.vd)}</td><td class="r">${fmt(c.cargue)}</td><td class="r">${fmt(c.tA)}</td><td class="r">${fmt(c.tB)}</td><td class="r">${fmt(c.tR)}</td><td class="r"><b>${fmt(c.costo)}</b></td><td class="r">${fmt(c.pagado)}</td><td class="r">${fmt(c.saldo)}</td><td>${bdo(c.stD)}</td><td>${bd(c.eA)}</td><td>${bd(c.eB)}</td><td>${bd(c.eR)}</td></tr>`).join(''):`<tr><td colspan="18" class="empty">Todavía no hay operaciones que mostrar.<br>Toque «➕ Nueva compra» para registrar la primera.</td></tr>`)+
  `</tbody><tfoot><tr><td colspan="6">TOTALES</td><td class="r">${fmt(T.vd)}</td><td class="r">${fmt(T.cargue)}</td><td class="r">${fmt(T.tA)}</td><td class="r">${fmt(T.tB)}</td><td class="r">${fmt(T.tR)}</td><td class="r">${fmt(T.costo)}</td><td class="r">${fmt(T.pagado)}</td><td class="r">${fmt(T.saldo)}</td><td colspan="4"></td></tr></tfoot>`;
  $('#tb').querySelectorAll('tbody tr.cl').forEach(tr=>[...tr.children].forEach((td,i)=>td.dataset.label=H[i]));
- $('#cnt').textContent=db.length+' operaciones almacenadas.';dash();ppl();vrender()}
+ $('#cnt').textContent=db.length+' operaciones almacenadas.';dash();ppl();vrender();prender()}
 $('#tb').onclick=e=>{const r=e.target.closest('tr.cl');if(!r)return;load(db.find(x=>x.id==r.dataset.id));tab(2)};
 // ---------- exportar
 const dl=(name,txt,type)=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type}));a.download=name;a.click()};
 $('#csv').onclick=()=>{const q=v=>`"${String(v??'').replace(/"/g,'""')}"`;
  const H=['Fecha','Procedencia','Tipo','Cantidad','Unidad','Dueño','Placa','Conductor','Cotero','Viajes','Aserrador','Bolillero','Arriero','Compra','Pagado dueño','Pendiente dueño','Cargue','Total aserrador','Total bolillero','Total arriero','Anticipos','Cancelaciones','Costo total','Total pagado','Saldo pendiente','Estado dueño','Estado aserrador','Estado bolillero','Estado arriero'];
- const L=rows().map(({o,c})=>[o.fecha,o.proc,o.tipo,o.cant,o.uni,o.dueno,o.placa,o.cond,o.cotero,o.viajes,o.nA,o.nB,o.nR,c.vd,c.pagD,c.pendD,c.cargue,c.tA,c.tB,c.tR,c.ant,c.can,c.costo,c.pagado,c.saldo,c.stD,c.eA,c.eB,c.eR].map(q).join(','));
+ const L=rows().map(({o,c})=>[o.fecha,o.proc,o.tipo,o.cant,o.uni,o.dueno,o.placa,o.cond,o.cotero,(o.viajes||[]).length,o.nA,o.nB,o.nR,c.vd,c.pagD,c.pendD,c.cargue,c.tA,c.tB,c.tR,c.ant,c.can,c.costo,c.pagado,c.saldo,c.stD,c.eA,c.eB,c.eR].map(q).join(','));
  dl('reporte_madera.csv','\ufeff'+[H.map(q).join(','),...L].join('\n'),'text/csv')};
-$('#ex').onclick=()=>dl('respaldo_madera_'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify({compras:db,ventas:vt},null,1),'application/json');
+$('#ex').onclick=()=>dl('respaldo_madera_'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify({compras:db,ventas:vt,prestamos:pr},null,1),'application/json');
 $('#im').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
- r.onload=()=>{try{let d=JSON.parse(r.result),dv=[];if(!Array.isArray(d)){dv=d.ventas||[];d=d.compras||[]}
+ r.onload=()=>{try{let d=JSON.parse(r.result),dv=[],dp=[];if(!Array.isArray(d)){dv=d.ventas||[];dp=d.prestamos||[];d=d.compras||[]}
   if(confirm('Se importarán '+d.length+' operaciones. Aceptar = combinar con las existentes; (se reemplazan las de igual ID).')){
-   const m=new Map(db.map(x=>[x.id,x]));d.forEach(x=>m.set(x.id,x));db=[...m.values()];save();if(cloud)db.forEach(cloud.set);const mv=new Map(vt.map(x=>[x.id,x]));dv.forEach(x=>mv.set(x.id,x));vt=[...mv.values()];saveV();if(cloud)vt.forEach(cloud.setV);render();toast('✔ Importación completa')}}
+   const m=new Map(db.map(x=>[x.id,x]));d.forEach(x=>m.set(x.id,x));db=[...m.values()];save();if(cloud)db.forEach(cloud.set);const mv=new Map(vt.map(x=>[x.id,x]));dv.forEach(x=>mv.set(x.id,x));vt=[...mv.values()];saveV();if(cloud)vt.forEach(cloud.setV);const mp=new Map(pr.map(x=>[x.id,x]));dp.forEach(x=>mp.set(x.id,x));pr=[...mp.values()];savePr();if(cloud)pr.forEach(cloud.setP);render();toast('✔ Importación completa')}}
   catch(_){alert('Archivo de respaldo no válido')}};r.readAsText(f);e.target.value=''};
 // ---------- ventas (ingresos)
 const cv=v=>{const t=n(v.cant)*n(v.precio),s=t-n(v.abono);return{t,s,e:stt(t,n(v.abono))}};
@@ -115,6 +132,39 @@ function vrender(){const g=k=>$('#vf_'+k).value.trim();
  const tt=R.reduce((a,{o,c})=>({t:a.t+c.t,r:a.r+n(o.abono),s:a.s+c.s}),{t:0,r:0,s:0}),H=['Fecha','Cliente','Producto','Detalle','Cantidad','Precio','Total','Recibido','Por cobrar','Estado'];
  $('#vt').innerHTML='<thead><tr>'+H.map((x,i)=>`<th class="${i>3&&i<9?'r':''}">${x}</th>`).join('')+'</tr></thead><tbody>'+(R.map(({o,c})=>`<tr class="cl" data-id="${o.id}"><td>${o.fecha||''}</td><td>${o.cliente||''}</td><td>${o.prod}</td><td>${o.det||''}</td><td class="r">${n(o.cant)}</td><td class="r">${fmt(n(o.precio))}</td><td class="r"><b>${fmt(c.t)}</b></td><td class="r">${fmt(n(o.abono))}</td><td class="r">${fmt(c.s)}</td><td>${bdv(c.e)}</td></tr>`).join('')||'<tr><td colspan="10" class="empty">Todavía no hay ventas que mostrar. Registre la primera arriba.</td></tr>')+`</tbody><tfoot><tr><td colspan="6">TOTALES</td><td class="r">${fmt(tt.t)}</td><td class="r">${fmt(tt.r)}</td><td class="r">${fmt(tt.s)}</td><td></td></tr></tfoot>`;
  $('#vt').querySelectorAll('tbody tr.cl').forEach(tr=>[...tr.children].forEach((td,i)=>td.dataset.label=H[i]))}
+// ---------- préstamos y quincena
+const cpr=p=>{const d=(p.desc||[]).reduce((a,x)=>a+n(x.v),0),s=n(p.valor)-d;return{d,s,e:s<=0?'cancelado':d>0?'parcial':'pendiente'}};
+const bdp=s=>`<span class="st ${s}">${{cancelado:'✔ Saldado',parcial:'◐ Abonó',pendiente:'● Debe'}[s]}</span>`;
+const nk=s=>String(s||'').trim().toLowerCase();
+$('#pg').innerHTML=mk([['fecha','Fecha del préstamo','date'],['persona','Nombre de la persona'],['rol','Rol','sel','aserrador,bolillero,arriero,cotero,otro'],['valor','Valor prestado','number'],['nota','Nota (opcional)']],'op_');
+let curP=null;
+const pform=()=>{const o={};new FormData($('#fp')).forEach((v,k)=>o[k]=v);return o};
+function pload(r){curP=r?r.id:null;$('#fp').reset();const o=r||{fecha:today()};
+ Object.keys(o).forEach(k=>{const e=$('#fp').elements[k];if(e&&k!='id'&&k!='desc')e.value=o[k]});
+ $('#px').classList.toggle('hide',!r);$('#pft').textContent=r?'✏️ Editando préstamo':'➕ Registrar un préstamo';$('#pd').open=true}
+$('#ps').onclick=()=>{const o=pform();if(!o.persona||!n(o.valor)){toast('⚠ Falta el nombre o el valor del préstamo');return}
+ const old=pr.find(x=>x.id==curP);o.id=curP||Date.now();o.desc=old?old.desc:[];const i=pr.findIndex(x=>x.id==o.id);i>=0?pr[i]=o:pr.push(o);
+ savePr();if(cloud)cloud.setP(o);toast('✔ Préstamo guardado');pload(null);render()};
+$('#pn').onclick=()=>pload(null);
+$('#px').onclick=()=>{if(confirm('¿Eliminar este préstamo?')){pr=pr.filter(x=>x.id!=curP);savePr();if(cloud)cloud.delP(curP);pload(null);render()}};
+$('#ptb').onclick=e=>{const r=e.target.closest('tr.cl');if(r){pload(pr.find(x=>x.id==r.dataset.id));scrollTo(0,0)}};
+$('#qm').value=today().slice(0,7);$('#qm').oninput=$('#qh').oninput=()=>prender();
+function qdata(){const m=$('#qm').value,h=$('#qh').value;if(!m)return null;
+ const [y,mo]=m.split('-').map(Number),end=m+'-'+(h=='1'?'15':String(new Date(y,mo,0).getDate())),ini=m+(h=='1'?'-01':'-16'),key=m+'-'+h,P={};
+ const add=(rol,nm,g,yy)=>{if(!nm||!String(nm).trim())return;const id=rol+'|'+nk(nm),e=P[id]=P[id]||{rol,nm:String(nm).trim(),g:0,y:0};e.g+=g;e.y+=yy};
+ db.filter(o=>o.fecha>=ini&&o.fecha<=end).forEach(o=>{const c=calc(o);add('aserrador',o.nA,c.tA,c.pgA);add('bolillero',o.nB,c.tB,c.pgB);add('arriero',o.nR,c.tR,c.pgR);add('cotero',o.cotero,c.cargueC,0)});
+ pr.forEach(p=>add(p.rol,p.persona,0,0));
+ const rows=Object.entries(P).map(([id,e])=>{const L=pr.filter(p=>p.rol+'|'+nk(p.persona)==id),s=L.reduce((a,p)=>a+Math.max(0,cpr(p).s),0),
+  ap=L.reduce((a,p)=>a+(p.desc||[]).filter(x=>x.q==key).reduce((b,x)=>b+n(x.v),0),0),por=Math.max(0,e.g-e.y),dsc=ap||Math.min(por,s);
+  return{...e,L,s,ap,por,dsc,net:por-dsc}}).filter(e=>e.g||e.s||e.ap).sort((a,b)=>a.nm.localeCompare(b.nm));
+ return{rows,key,end}}
+$('#qt').onclick=e=>{const b=e.target.closest('[data-ap]');if(!b)return;const q=qdata(),r=q.rows[b.dataset.ap];if(!r||r.dsc<=0)return;let rest=r.dsc;
+ r.L.filter(p=>cpr(p).s>0).sort((a,b)=>(a.fecha||'').localeCompare(b.fecha||'')).forEach(p=>{const t=Math.min(rest,cpr(p).s);if(t>0){p.desc=[...(p.desc||[]),{f:q.end,v:t,q:q.key}];rest-=t;if(cloud)cloud.setP(p)}});
+ savePr();toast('✔ Descuento aplicado');render()};
+function prender(){const H=['Fecha','Persona','Rol','Valor','Descontado','Saldo','Estado'];
+ $('#ptb').innerHTML='<thead><tr>'+H.map((x,i)=>`<th class="${i>2&&i<6?'r':''}">${x}</th>`).join('')+'</tr></thead><tbody>'+(pr.slice().sort((a,b)=>(b.fecha||'').localeCompare(a.fecha||'')).map(p=>{const c=cpr(p);return `<tr class="cl" data-id="${p.id}"><td>${p.fecha||''}</td><td>${p.persona}</td><td>${p.rol}</td><td class="r">${fmt(n(p.valor))}</td><td class="r">${fmt(c.d)}</td><td class="r"><b>${fmt(c.s)}</b></td><td>${bdp(c.e)}</td></tr>`}).join('')||'<tr><td colspan="7" class="empty">No hay préstamos registrados todavía.</td></tr>')+'</tbody>';
+ const q=qdata();
+ $('#qt').innerHTML=!q?'':'<thead><tr><th>Persona</th><th>Rol</th><th class="r">Ganado en la quincena</th><th class="r">Ya pagado / anticipos</th><th class="r">Por pagar</th><th class="r">Préstamo pendiente</th><th class="r">Descuento</th><th class="r">Neto a pagar</th><th></th></tr></thead><tbody>'+(q.rows.map((r,i)=>`<tr><td><b>${r.nm}</b></td><td>${r.rol}</td><td class="r">${fmt(r.g)}</td><td class="r">${fmt(r.y)}</td><td class="r">${fmt(r.por)}</td><td class="r">${fmt(r.s+r.ap)}</td><td class="r"><b>${fmt(r.dsc)}</b></td><td class="r"><b>${fmt(r.net)}</b></td><td>${r.ap?'<span class="st cancelado">✔ Aplicado</span>':r.dsc>0?`<button class="b s" data-ap="${i}">Aplicar descuento</button>`:''}</td></tr>`).join('')||'<tr><td colspan="9" class="empty">No hay movimientos ni préstamos en esta quincena.</td></tr>')+'</tbody>'}
 // ---------- panel de inicio
 const MES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 const sh=v=>v>=1e6?(v/1e6).toFixed(1)+' M':v>=1e3?Math.round(v/1e3)+' mil':Math.round(v);
@@ -133,44 +183,51 @@ function dash(){
  $('#ch').innerHTML=`<svg viewBox="0 0 ${W} ${H}">${[0,1,2,3,4].map(i=>{const v=mx*i/4;return `<line x1="${L}" x2="${W-14}" y1="${Y(v)}" y2="${Y(v)}" class="gl"/><text x="${L-8}" y="${Y(v)+4}" text-anchor="end">${sh(v)}</text>`}).join('')}${ms.map((m,i)=>`<text x="${X(i)}" y="${H-8}" text-anchor="middle">${MES[+m.slice(5)-1]}</text>`).join('')}${[[A,'#2f6fe4'],[B,'#f59e0b']].map(([s,c])=>`<polygon points="${X(0)},${Y(0)} ${pts(s)} ${X(5)},${Y(0)}" fill="${c}" opacity=".1"/><polyline points="${pts(s)}" fill="none" stroke="${c}" stroke-width="2.5"/>${s.map((v,i)=>`<circle cx="${X(i)}" cy="${Y(v)}" r="4" fill="${c}"/>`).join('')}`).join('')}</svg><div class="lg"><span><i style="background:#2f6fe4"></i>Ingresos (ventas)</span><span><i style="background:#f59e0b"></i>Costos (compras)</span></div>`;
  const pe=[];all.forEach(({o,c})=>[['Dueño','dueno','pendD','stD'],['Aserrador','nA','sA','eA'],['Bolillero','nB','sB','eB'],['Arriero','nR','sR','eR']].forEach(([r,n,s,e])=>{if(c[s]>0&&o[n])pe.push({id:o.id,r,n:o[n],v:c[s],e:c[e]})}));
  pe.sort((a,b)=>b.v-a.v);
- $('#pp').innerHTML='<thead><tr><th>Persona</th><th>Rol</th><th class="r">Saldo</th><th>Estado</th></tr></thead><tbody>'+(pe.slice(0,6).map(p=>`<tr class="cl" data-id="${p.id}"><td>${p.n}</td><td>${p.r}</td><td class="r">${fmt(p.v)}</td><td>${bd(p.e)}</td></tr>`).join('')||'<tr><td colspan="4" class="empty">¡Sin pagos pendientes! 🎉</td></tr>')+'</tbody>';
+ $('#pp').innerHTML='<thead><tr><th>Persona</th><th>Rol</th><th class="r">Saldo</th><th>Estado</th></tr></thead><tbody>'+(pe.slice(0,6).map(p=>`<tr class="cl" data-id="${p.id}"><td>${p.n}</td><td>${p.r}</td><td class="r">${fmt(p.v)}</td><td>${(p.r=='Dueño'?bdo:bd)(p.e)}</td></tr>`).join('')||'<tr><td colspan="4" class="empty">¡Sin pagos pendientes! 🎉</td></tr>')+'</tbody>';
  const cb=V.filter(x=>x.c.s>0).sort((a,b)=>b.c.s-a.c.s).slice(0,6);
  $('#cp').innerHTML='<thead><tr><th>Cliente</th><th>Producto</th><th class="r">Por cobrar</th><th>Estado</th></tr></thead><tbody>'+(cb.map(({o,c})=>`<tr class="cl" data-vid="${o.id}"><td>${o.cliente}</td><td>${o.prod}</td><td class="r">${fmt(c.s)}</td><td>${bdv(c.e)}</td></tr>`).join('')||'<tr><td colspan="4" class="empty">Nadie le debe por ahora 🎉</td></tr>')+'</tbody>';
  const rec=(A,f)=>A.slice().sort((a,b)=>(b.o.fecha||'').localeCompare(a.o.fecha||'')).slice(0,5).map(f).join('');
  $('#lv').innerHTML=rec(V,({o,c})=>`<div class="li" data-vid="${o.id}"><div><b>${o.cliente||'-'}</b><small>${n(o.cant)} ${o.prod} · ${o.fecha||''}</small></div><div class="r"><b>${fmt(c.t)}</b><small>Por cobrar ${fmt(c.s)}</small></div></div>`)||'<p class="empty">Aún no hay ventas. Toque «💰 Nueva venta».</p>';
  $('#lo').innerHTML=rec(all,({o,c})=>`<div class="li" data-id="${o.id}"><div><b>${o.dueno||'-'}</b><small>${o.proc||''} · ${o.fecha||''}</small></div><div class="r"><b>${fmt(c.costo)}</b><small>Saldo ${fmt(c.saldo)}</small></div></div>`)||'<p class="empty">Aún no hay compras. Toque «➕ Nueva compra».</p>'}
 // ---------- pestañas
-const TT={4:'Inicio',1:'Reportes y operaciones',2:'Nueva compra de madera',7:'Ventas e ingresos',3:'Respaldo y datos',6:'Personas y proveedores',5:'Pagos pendientes'};
-function tab(i,al){const nv=al||i;[1,2,3,4,6,7].forEach(k=>$('#v'+k).classList.toggle('hide',k!=i));[1,2,3,4,5,6,7].forEach(k=>$('#t'+k).classList.toggle('on',k==nv));$('#pt').textContent=TT[nv];render();scrollTo(0,0)}
+const TT={4:'Inicio',1:'Reportes y operaciones',2:'Nueva compra de madera',7:'Ventas e ingresos',8:'Préstamos y quincena',3:'Respaldo y datos',6:'Personas y proveedores',5:'Pagos pendientes'};
+function tab(i,al){const nv=al||i;[1,2,3,4,6,7,8].forEach(k=>$('#v'+k).classList.toggle('hide',k!=i));[1,2,3,4,5,6,7,8].forEach(k=>$('#t'+k).classList.toggle('on',k==nv));$('#pt').textContent=TT[nv];render();scrollTo(0,0)}
 function ppl(){const m={},q=($('#pq').value||'').toLowerCase();
- db.forEach(o=>{const c=calc(o);[['Dueño','dueno','vd','pagD','pendD'],['Aserrador','nA','tA','pgA','sA'],['Bolillero','nB','tB','pgB','sB'],['Arriero','nR','tR','pgR','sR']].forEach(([r,n,t,p,s])=>{const nm=(o[n]||'').trim();if(!nm)return;const k=r+'|'+nm.toLowerCase(),e=m[k]=m[k]||{nm,r,n:0,t:0,p:0,s:0};e.n++;e.t+=c[t];e.p+=c[p];e.s+=c[s]})});
+ db.forEach(o=>{const c=calc(o);[['Dueño','dueno','valTrans','pagD','pendD'],['Aserrador','nA','tA','pgA','sA'],['Bolillero','nB','tB','pgB','sB'],['Arriero','nR','tR','pgR','sR']].forEach(([r,n,t,p,s])=>{const nm=(o[n]||'').trim();if(!nm)return;const k=r+'|'+nm.toLowerCase(),e=m[k]=m[k]||{nm,r,n:0,t:0,p:0,s:0};e.n++;e.t+=c[t];e.p+=c[p];e.s+=c[s]})});
  const L=Object.values(m).filter(e=>e.nm.toLowerCase().includes(q)).sort((a,b)=>b.s-a.s);
  $('#pt2').innerHTML='<thead><tr><th>Nombre</th><th>Rol</th><th class="r">Operaciones</th><th class="r">Total</th><th class="r">Pagado</th><th class="r">Saldo</th><th>Estado</th></tr></thead><tbody>'+(L.map(e=>`<tr><td><b>${e.nm}</b></td><td>${e.r}</td><td class="r">${e.n}</td><td class="r">${fmt(e.t)}</td><td class="r">${fmt(e.p)}</td><td class="r">${fmt(e.s)}</td><td>${bd(stt(e.t,e.p))}</td></tr>`).join('')||'<tr><td colspan="7" class="empty">No hay personas registradas todavía.</td></tr>')+'</tbody>'}
 $('#pq').oninput=ppl;
 const est=v=>$('#f_est').value=v;
-$('#t4').onclick=()=>tab(4);$('#t2').onclick=()=>{load(null);tab(2)};$('#t3').onclick=()=>tab(3);$('#t6').onclick=()=>tab(6);$('#t7').onclick=()=>tab(7);$('#nv').onclick=()=>{vload(null);tab(7)};
+$('#t4').onclick=()=>tab(4);$('#t2').onclick=()=>{load(null);tab(2)};$('#t3').onclick=()=>tab(3);$('#t6').onclick=()=>tab(6);$('#t7').onclick=()=>tab(7);$('#t8').onclick=()=>{pload(null);tab(8)};$('#nv').onclick=()=>{vload(null);tab(7)};
 $('#t1').onclick=()=>{if($('#f_est').value=='con saldo pendiente')est('todos');tab(1)};
 $('#t5').onclick=()=>{est('con saldo pendiente');tab(1,5)};
 $('#nb').onclick=()=>{load(null);tab(2)};$('#xb').onclick=()=>$('#csv').click();
 $('#v4').onclick=e=>{const v=e.target.closest('[data-vid]');if(v){vload(vt.find(x=>x.id==v.dataset.vid));tab(7);return}const r=e.target.closest('[data-id]');if(r){load(db.find(x=>x.id==r.dataset.id));tab(2)}};
-const gate=ok=>{$('.side').classList.toggle('hide',!ok);$('.top').classList.toggle('hide',!ok);$('#v0').classList.toggle('hide',ok);if(ok)tab(4);else[1,2,3,4,6,7].forEach(k=>$('#v'+k).classList.add('hide'))};
+const gate=ok=>{$('.side').classList.toggle('hide',!ok);$('.top').classList.toggle('hide',!ok);$('#v0').classList.toggle('hide',ok);if(ok)tab(4);else[1,2,3,4,6,7,8].forEach(k=>$('#v'+k).classList.add('hide'))};
 async function initCloud(){
  const B='https://www.gstatic.com/firebasejs/10.12.2/';
  const [A,Au,Fs]=await Promise.all([import(B+'firebase-app.js'),import(B+'firebase-auth.js'),import(B+'firebase-firestore.js')]);
  const app=A.initializeApp(FIREBASE_CONFIG),auth=Au.getAuth(app),fs=Fs.initializeFirestore(app,{localCache:Fs.persistentLocalCache()}),col=Fs.collection(fs,'operaciones');
  const err=e=>alert('Error con la nube: '+e.message);
- const colV=Fs.collection(fs,'ventas');cloud={setV:o=>Fs.setDoc(Fs.doc(colV,String(o.id)),o).catch(err),delV:id=>Fs.deleteDoc(Fs.doc(colV,String(id))).catch(err),set:o=>Fs.setDoc(Fs.doc(col,String(o.id)),o).catch(err),del:id=>Fs.deleteDoc(Fs.doc(col,String(id))).catch(err)};
+ const colV=Fs.collection(fs,'ventas'),colP=Fs.collection(fs,'prestamos');cloud={setP:o=>Fs.setDoc(Fs.doc(colP,String(o.id)),o).catch(err),delP:id=>Fs.deleteDoc(Fs.doc(colP,String(id))).catch(err),setV:o=>Fs.setDoc(Fs.doc(colV,String(o.id)),o).catch(err),delV:id=>Fs.deleteDoc(Fs.doc(colV,String(id))).catch(err),set:o=>Fs.setDoc(Fs.doc(col,String(o.id)),o).catch(err),del:id=>Fs.deleteDoc(Fs.doc(col,String(id))).catch(err)};
  const login=()=>Au.signInWithEmailAndPassword(auth,$('#em').value.trim(),$('#pw').value).then(()=>{$('#lerr').textContent='';$('#pw').value=''}).catch(()=>$('#lerr').textContent='Correo o contraseña incorrectos');
  $('#lg').onclick=login;$('#pw').onkeydown=e=>e.key=='Enter'&&login();
  $('#so').onclick=()=>Au.signOut(auth);$('#so').classList.remove('hide');
- let un=null,un2=null,first=true,firstV=true;
+ $('#rp').onclick=ev=>{ev.preventDefault();const e=$('#em').value.trim();if(!e){$('#lerr').textContent='Escriba su correo arriba y vuelva a tocar aquí';return}
+  Au.sendPasswordResetEmail(auth,e).then(()=>$('#lerr').textContent='✔ Le enviamos un correo para cambiar la contraseña').catch(()=>$('#lerr').textContent='No se pudo enviar el correo. Revise que esté bien escrito.')};
+ let idle;const bump=()=>{clearTimeout(idle);idle=setTimeout(()=>{if(auth.currentUser){Au.signOut(auth);toast('Sesión cerrada por inactividad')}},SESION_MIN*60000)};
+ ['click','keydown','touchstart'].forEach(ev=>addEventListener(ev,bump,{passive:true}));bump();
+ let un=null,un2=null,un3=null,first=true,firstV=true;
  Au.onAuthStateChanged(auth,u=>{
-  if(!u){gate(false);if(un)un();if(un2)un2();un=un2=null;first=firstV=true;return}
+  if(!u){gate(false);if(un)un();if(un2)un2();if(un3)un3();un=un2=un3=null;first=firstV=true;return}
   $('#us').textContent='☁ '+u.email;gate(true);
   un=Fs.onSnapshot(col,s=>{let d=s.docs.map(x=>x.data());
    if(first&&!s.metadata.fromCache){first=false;const ids=new Set(d.map(x=>String(x.id))),pend=db.filter(x=>!ids.has(String(x.id)));
     if(pend.length&&confirm('Hay '+pend.length+' operaciones guardadas solo en este navegador. ¿Subirlas a la nube?')){pend.forEach(cloud.set);d=d.concat(pend)}}
    db=d;save();render()},err);
-  un2=Fs.onSnapshot(colV,s=>{const d=s.docs.map(x=>x.data());if(firstV&&!s.metadata.fromCache){firstV=false;const ids=new Set(d.map(x=>String(x.id)));vt.filter(x=>!ids.has(String(x.id))).forEach(x=>{cloud.setV(x);d.push(x)})}vt=d;saveV();render()},err)})}
-if(FIREBASE_CONFIG.apiKey){load(null);gate(false);initCloud().catch(e=>{$('#lerr').textContent='No se pudo conectar con Firebase: '+e.message})}
+  un2=Fs.onSnapshot(colV,s=>{const d=s.docs.map(x=>x.data());if(firstV&&!s.metadata.fromCache){firstV=false;const ids=new Set(d.map(x=>String(x.id)));vt.filter(x=>!ids.has(String(x.id))).forEach(x=>{cloud.setV(x);d.push(x)})}vt=d;saveV();render()},err);
+  un3=Fs.onSnapshot(colP,s=>{pr=s.docs.map(x=>x.data());savePr();render()},err)})}
+$('#sp').onchange=e=>$('#pw').type=e.target.checked?'text':'password';
+if(!FIREBASE_CONFIG.apiKey&&!MODO_LOCAL){load(null);gate(false);$('#lg').disabled=true;$('#lerr').textContent='Falta configurar Firebase: pegue los datos de su proyecto en config.js'}
+else if(FIREBASE_CONFIG.apiKey){load(null);gate(false);initCloud().catch(e=>{$('#lerr').textContent='No se pudo conectar con Firebase: '+e.message})}
 else{$('#us').textContent='Modo local (sin nube)';load(null);tab(4)}
