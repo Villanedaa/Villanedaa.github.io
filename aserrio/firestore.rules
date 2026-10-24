@@ -11,5 +11,6 @@ service cloud.firestore {
     match /operaciones/{id} { allow read, write: if permitido(); }
     match /ventas/{id}      { allow read, write: if permitido(); }
     match /prestamos/{id}   { allow read, write: if permitido(); }
+    match /bancos/{id}      { allow read, write: if permitido(); }
   }
 }

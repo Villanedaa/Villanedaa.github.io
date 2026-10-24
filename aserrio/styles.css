@@ -1,11 +1,11 @@
 /* MaderaFlow - estilo claro: blanco y azul */
-:root{color-scheme:light;--bg:#f2f7ff;--card:#fff;--tx:#14213d;--mu:#64748b;--bl:#2f6fe4;--bl2:#1e4fc0;--sky:#e6f0ff;--bd:#dbe6f6;--ok:#16a34a;--wa:#f59e0b;--er:#ef4444}
+:root{color-scheme:light;--bg:#f3f8f3;--card:#fff;--tx:#14213d;--mu:#64748b;--bl:#2f7a3b;--bl2:#14532d;--sky:#e6f2e7;--bd:#d9e7da;--ok:#16a34a;--wa:#f59e0b;--er:#ef4444}
 *{box-sizing:border-box}
 body{margin:0;font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--tx)}
 svg{max-width:100%}
 .app{display:flex;min-height:100vh}
 /* ----- menú lateral ----- */
-.side{width:240px;flex-shrink:0;background:linear-gradient(180deg,#2f6fe4,#1e4fc0);color:#fff;display:flex;flex-direction:column;padding:18px 12px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.side{width:240px;flex-shrink:0;background:linear-gradient(180deg,#2f7a3b,#14532d);color:#fff;display:flex;flex-direction:column;padding:18px 12px;position:sticky;top:0;height:100vh;overflow-y:auto}
 .brand{display:flex;gap:10px;align-items:center;font-weight:700;font-size:19px;padding:0 8px 16px}
 .brand svg{width:36px;height:36px;flex-shrink:0}.brand small{display:block;font-weight:400;font-size:11.5px;opacity:.8}
 .ws{display:flex;align-items:center;gap:10px;background:#ffffff26;border-radius:10px;padding:9px 10px;margin-bottom:14px;font-size:13px;overflow:hidden}
@@ -22,13 +22,13 @@ nav button.on{background:#fff;color:var(--bl2);font-weight:700;box-shadow:0 2px 
 .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:var(--card);border-bottom:1px solid var(--bd);padding:12px 22px}
 .top h1{font-size:21px;margin:0;color:var(--bl2)}.top .row{margin:0}
 main{max-width:1150px;margin:0 auto;padding:18px 22px 30px}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:16px;box-shadow:0 2px 8px #2f6fe40d}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:16px;box-shadow:0 2px 8px #2f7a3b0d}
 h2{font-size:16px;margin:0 0 12px;color:var(--bl2)}.ptitle{font-size:21px}
 .intro,.hint{color:var(--mu);margin:0 0 12px;font-size:14px}.hint{margin-top:-2px}
 summary{cursor:pointer;font-weight:700;font-size:16px;color:var(--bl2);padding:2px 0 8px}details:not([open])>summary{padding-bottom:0}
 .hello{display:flex;gap:12px;align-items:center;margin-bottom:14px}.av{width:46px;height:46px;border-radius:50%;background:var(--sky);display:grid;place-items:center;font-size:22px}
 .k4{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:16px}
-.kc{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;box-shadow:0 2px 8px #2f6fe40d}
+.kc{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;box-shadow:0 2px 8px #2f7a3b0d}
 .kc small{color:var(--mu);font-weight:600;display:block}.kc b{font-size:22px;display:block;margin:2px 0}
 .kc i{font-style:normal;font-size:12px;display:block;min-height:18px}.up{color:var(--ok)}.dn{color:var(--er)}
 .sp{width:100%;height:36px;margin-top:6px}
@@ -41,7 +41,7 @@ summary{cursor:pointer;font-weight:700;font-size:16px;color:var(--bl2);padding:2
 .g{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
 label{display:flex;flex-direction:column;font-size:13.5px;font-weight:600;gap:5px}
 input,select,output{font:inherit;font-weight:400;padding:10px;min-height:44px;border:1.5px solid var(--bd);border-radius:10px;background:#fff;color:var(--tx)}
-input:focus,select:focus{outline:3px solid #2f6fe433;border-color:var(--bl)}
+input:focus,select:focus{outline:3px solid #2f7a3b33;border-color:var(--bl)}
 output{font-weight:700;display:flex;align-items:center;background:var(--sky);border-color:var(--sky);color:var(--bl2)}
 .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 button.b{background:var(--bl);color:#fff;border:0;padding:10px 16px;border-radius:10px;cursor:pointer;font:inherit;font-weight:600;min-height:42px}
@@ -51,8 +51,8 @@ button.b.d{background:var(--er)}
 .kp{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:10px}
 .kp div{background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:10px}
 .kp small{color:var(--mu);display:block;font-size:12.5px}.kp b{font-size:17px}
-.kp div:nth-last-child(-n+2){background:var(--bl);border-color:var(--bl);color:#fff}.kp div:nth-last-child(-n+2) small{color:#dbe8ff}
-.bar{position:sticky;bottom:0;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:10px 14px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;box-shadow:0 -4px 14px #2f6fe426;z-index:4}
+.kp div:nth-last-child(-n+2){background:var(--bl);border-color:var(--bl);color:#fff}.kp div:nth-last-child(-n+2) small{color:#dcefdc}
+.bar{position:sticky;bottom:0;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:10px 14px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;box-shadow:0 -4px 14px #2f7a3b26;z-index:4}
 .bar .row{margin:0 0 0 auto}.bt small{display:block;color:var(--mu);font-size:12px}.bt b{font-size:18px;color:var(--bl2)}
 /* ----- tablas ----- */
 .tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}
@@ -89,3 +89,29 @@ a{color:var(--bl)}
 .lv{flex:1 1 100%;font-size:12.5px;color:var(--bl2);min-height:0}.lv:empty{display:none}
 .x{background:#fff;border:1.5px solid var(--bd);color:var(--er);border-radius:8px;width:44px;height:44px;cursor:pointer;font-size:16px}
 .mv{font-size:13px}.lw .b{margin-top:6px}
+
+/* ----- pagos pendientes e historial de fincas ----- */
+h3{font-size:14.5px;margin:18px 0 8px;color:var(--bl2)}
+.fc{border:1px solid var(--bd);border-radius:12px;padding:10px 12px;margin-bottom:10px;background:var(--bg)}.fc[open]{background:#fff}
+.fc summary{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:0}
+.fc summary>span:first-child::before{content:'▸ ';color:var(--bl)}.fc[open]>summary>span:first-child::before{content:'▾ '}
+.fc summary small{display:block;color:var(--mu);font-weight:400;font-size:12.5px}
+.fc .kp{margin:10px 0}
+.dev{margin-top:10px;text-align:center;font-size:11.5px;opacity:.8}
+#pk div:nth-last-child(2),#ck div:nth-last-child(2),#hk div:nth-last-child(2),.fc .kp div:nth-last-child(2){background:var(--bg);border-color:var(--bd);color:inherit}
+#pk div:nth-last-child(2) small,#ck div:nth-last-child(2) small,#hk div:nth-last-child(2) small,.fc .kp div:nth-last-child(2) small{color:var(--mu)}
+
+/* ----- trabajadores dinámicos y bancos ----- */
+.wc.card{background:var(--bg);margin:0 0 12px;box-shadow:none}
+.wh{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;color:var(--bl2);font-size:16px}
+.addw{margin-top:10px}.addw>summary{display:inline-block;list-style:none;background:var(--bl);color:#fff;padding:10px 16px;border-radius:10px;font-size:15px;font-weight:600}
+.addw>summary::-webkit-details-marker{display:none}.addw>summary:hover{background:var(--bl2)}
+.addw .menu{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px;margin-top:10px}
+.bkc small{font-weight:700;color:var(--bl2)}.bkc{cursor:pointer}.bkc:hover{background:var(--sky)}
+button.b.sm{padding:4px 10px;min-height:32px;font-size:13px;margin-top:6px}
+.x.sm{width:32px;height:32px;font-size:13px}
+
+/* ----- logo ----- */
+.brand img{width:56px;height:56px;flex-shrink:0;border-radius:50%;box-shadow:0 2px 8px #0004}
+.lgimg{display:block;margin:0 auto 6px;width:130px;height:130px}
+.side>*{flex-shrink:0}

@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Control de Compra y Movilización de Madera</title>
-<link rel="stylesheet" href="styles.css?v=7">
+<link rel="stylesheet" href="styles.css?v=11">
 </head>
 <body>
 <div class="app">
-<aside class="side"><div class="brand"><svg width="36" height="36" viewBox="0 0 32 32"><path d="M16 2l12 7v14l-12 7-12-7V9z" fill="#fff"/><path d="M16 8l6 9h-3.5v7h-5v-7H10z" fill="#2f6fe4"/></svg><div>MaderaFlow<small>Control de compras</small></div></div>
+<aside class="side"><div class="brand"><img src="logo.png" alt="Aserríos Villaneda" width="56" height="56"><div>Aserrios Villaneda<small>Control de compras</small></div></div>
 <div class="ws"><span class="av2">👷</span><span id="us">Mi negocio</span></div>
-<nav><button id="t4" class="on"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Inicio</span></button><button id="t7"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M14.5 9.5c-.5-1-1.5-1.5-2.5-1.5-1.5 0-2.5.8-2.5 2s1 1.7 2.5 2 2.5.8 2.5 2-1 2-2.5 2c-1 0-2-.5-2.5-1.5M12 6v2M12 16v2"/></svg><span>Ventas (ingresos)</span></button><button id="t2"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span>Nueva compra</span></button><button id="t1"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V4M4 20h16M8 16v-5M13 16V8M18 16v-9"/></svg><span>Reportes</span></button><button id="t5"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M16 15h2"/></svg><span>Pagos pendientes</span></button><button id="t6"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.5 3-6 6.5-6s6.5 2.5 6.5 6M17 4.5a3.5 3.5 0 0 1 0 7M21.5 20c0-2.5-1.5-4.5-4-5.5"/></svg><span>Personas</span></button><button id="t8"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h11l-3-3M17 17H6l3 3"/></svg><span>Préstamos y quincena</span></button><button id="t3"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg><span>Respaldo y datos</span></button></nav>
-<div class="sf"><button id="so" class="hide">Cerrar sesión</button></div></aside>
+<nav><button id="t4" class="on"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Inicio</span></button><button id="t7"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M14.5 9.5c-.5-1-1.5-1.5-2.5-1.5-1.5 0-2.5.8-2.5 2s1 1.7 2.5 2 2.5.8 2.5 2-1 2-2.5 2c-1 0-2-.5-2.5-1.5M12 6v2M12 16v2"/></svg><span>Ventas (ingresos)</span></button><button id="t2"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span>Nueva compra</span></button><button id="t1"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V4M4 20h16M8 16v-5M13 16V8M18 16v-9"/></svg><span>Reportes</span></button><button id="t5"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M16 15h2"/></svg><span>Pagos pendientes</span></button><button id="t6"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.5 3-6 6.5-6s6.5 2.5 6.5 6M17 4.5a3.5 3.5 0 0 1 0 7M21.5 20c0-2.5-1.5-4.5-4-5.5"/></svg><span>Personas</span></button><button id="t8"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h11l-3-3M17 17H6l3 3"/></svg><span>Préstamos y quincena</span></button><button id="t9"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-6 9 6M5 10v8M9 10v8M15 10v8M19 10v8M3 20h18"/></svg><span>Bancos</span></button><button id="t3"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg><span>Respaldo y datos</span></button></nav>
+<div class="sf"><button id="so" class="hide">Cerrar sesión</button><div class="dev">Desarrollado por Sebastián Villaneda</div></div></aside>
 <div class="mw"><div class="top"><h1 id="pt">Inicio</h1><div class="row"><button class="b s" id="xb">📥 Exportar</button><button class="b s" id="nv">💰 Nueva venta</button><button class="b" id="nb">➕ Nueva compra</button></div></div>
 <main>
 <section id="v7" class="hide">
@@ -29,6 +29,37 @@
 <div class="g" style="max-width:560px"><label>Mes<input type="month" id="qm"></label><label>Quincena<select id="qh"><option value="1">1.ª quincena (días 1 al 15)</option><option value="2">2.ª quincena (día 16 al fin de mes)</option></select></label></div>
 <div class="tw" style="margin-top:12px"><table id="qt"></table></div></div>
 </section>
+<section id="v5" class="hide">
+<p class="intro">Aquí ve lo que <b>usted debe pagar</b> y lo que <b>le deben a usted</b>. Toque una fila para abrir la compra o la venta.</p>
+<div class="card"><h2>💸 Por pagar: mis compras</h2>
+<div class="kp" id="pk"></div>
+<h3>🌲 Fincas: anticipo (abono) y saldo actual</h3><p class="hint">Cada finca recibe anticipos y cada viaje de madera los va descontando. Toque una finca para ver cuánto abono queda y en qué se ha ido rebajando.</p>
+<div id="fl"></div>
+<h3>👷 Pagos pendientes a trabajadores</h3>
+<div class="tw"><table id="po"></table></div></div>
+<div class="card"><h2>💰 Mis ventas: lo que me deben mis clientes</h2>
+<div class="kp" id="ck"></div>
+<p class="hint" style="margin-top:12px">Toque un cliente para ver qué ventas le debe.</p>
+<div id="cc"></div></div>
+<div class="card"><h2>📜 Historial de movimientos por finca</h2><p class="hint">Todos los anticipos entregados y los descuentos por viajes quedan guardados aquí. Filtre por finca, fechas o tipo de movimiento.</p>
+<div class="g" id="hf"><label>Finca (dueño)<select id="hf_finca"></select></label><label>Desde<input type="date" id="hf_d1"></label><label>Hasta<input type="date" id="hf_d2"></label><label>Tipo de movimiento<select id="hf_tipo"><option value="todos">todos</option><option value="a">Anticipos entregados</option><option value="v">Viajes (descuentos)</option></select></label></div>
+<div class="row"><button class="b s" id="hclr">Limpiar filtros</button></div>
+<div class="kp" id="hk" style="margin-top:12px"></div>
+<div class="tw" style="margin-top:12px"><table id="ht"></table></div></div>
+</section>
+<section id="v9" class="hide">
+<p class="intro">Aquí ve cuánto hay en cada cuenta y todo lo que ha entrado y salido. Cada pago de una compra y cada venta cobrada descuenta o suma en el banco que usted elija. <b>Toque una cuenta para ver solo sus movimientos.</b></p>
+<div class="k4" id="bcards"></div>
+<p class="note" id="bsin"></p>
+<details class="card" id="bd"><summary id="bft">➕ Agregar cuenta bancaria</summary><p class="hint">Para agregar otra cuenta o corregir el saldo inicial (lo que tenía la cuenta antes de empezar a usar el sistema).</p>
+<form id="fb" onsubmit="return false"><div class="g" id="bg"></div><div class="row"><button class="b" id="bsv">💾 Guardar cuenta</button><button class="b s" id="bnw">Limpiar</button><button class="b d hide" id="bdl">🗑 Eliminar</button></div></form></details>
+<details class="card" id="md"><summary>➕ Registrar un ingreso o retiro manual</summary><p class="hint">Para consignaciones, retiros o transferencias que no vienen de una compra ni de una venta. Para pasar plata entre dos cuentas, registre un retiro en una y un ingreso en la otra.</p>
+<form id="fmv" onsubmit="return false"><div class="g" id="mg"></div><div class="row"><button class="b" id="msv">💾 Guardar movimiento</button></div></form></details>
+<div class="card" id="bhc"><h2>📜 Historial de movimientos de los bancos</h2><p class="hint">Toque una fila de compra o venta para abrirla.</p>
+<div class="g" id="bhf"><label>Banco<select id="bh_banco"></select></label><label>Desde<input type="date" id="bh_d1"></label><label>Hasta<input type="date" id="bh_d2"></label><label>Tipo<select id="bh_tipo"><option value="todos">todos</option><option value="i">Entró dinero</option><option value="e">Salió dinero</option></select></label><label>Origen<select id="bh_origen"><option value="todos">todos</option><option value="c">Compras (pagos)</option><option value="v">Ventas (cobros)</option><option value="m">Manuales</option></select></label></div>
+<div class="row"><button class="b s" id="bhclr">Limpiar filtros</button></div>
+<div class="kp" id="bhk" style="margin-top:12px"></div><div class="tw" style="margin-top:12px"><table id="bht"></table></div></div>
+</section>
 <section id="v6" class="hide"><div class="card"><h2>Personas y proveedores</h2><p class="intro">Todo lo que se ha pagado y se le debe a cada dueño, aserrador, bolillero y arriero.</p><label>Buscar por nombre<input id="pq" placeholder="Escriba un nombre…"></label><div class="tw" style="margin-top:12px"><table id="pt2"></table></div></div></section>
 <section id="v4"><div class="hello"><div class="av">👷</div><div><b>Hola, bienvenido 👋</b><br><span class="note" id="dt"></span></div></div>
 <div class="k4" id="k4"></div>
@@ -37,11 +68,11 @@
 <div class="card"><h2>Por cobrar a clientes</h2><div class="tw"><table id="cp"></table></div></div>
 <div class="card"><h2>Últimas ventas</h2><div id="lv"></div></div>
 <div class="card"><h2>Últimas compras</h2><div id="lo"></div></div></div></section>
-<section id="v0" class="hide"><div class="card lgc"><div class="lgh"><svg width="48" height="48" viewBox="0 0 32 32"><path d="M16 2l12 7v14l-12 7-12-7V9z" fill="#2f6fe4"/><path d="M16 8l6 9h-3.5v7h-5v-7H10z" fill="#fff"/></svg><h2>MaderaFlow</h2><p class="intro">Ingrese con su correo y contraseña</p></div>
+<section id="v0" class="hide"><div class="card lgc"><div class="lgh"><img src="logo.png" alt="Aserríos Villaneda" width="130" height="130" class="lgimg"><h2>MaderaFlow</h2><p class="intro">Ingrese con su correo y contraseña</p></div>
  <div class="g" style="grid-template-columns:1fr"><label>Correo<input id="em" type="email" autocomplete="username" placeholder="usted@correo.com"></label><label>Contraseña<input id="pw" type="password" autocomplete="current-password"></label></div>
  <label class="ck"><input type="checkbox" id="sp"> Mostrar contraseña</label>
  <div class="row"><button class="b" id="lg" style="width:100%">Ingresar</button></div>
- <p class="note" style="text-align:center"><a href="#" id="rp">¿Olvidó su contraseña?</a></p><p class="note" id="lerr" style="color:var(--er);text-align:center"></p></div></section>
+ <p class="note" style="text-align:center"><a href="#" id="rp">¿Olvidó su contraseña?</a></p><p class="note" id="lerr" style="color:var(--er);text-align:center"></p><p class="note" style="text-align:center;margin-top:14px">Desarrollado por Sebastián Villaneda</p></div></section>
 <section id="v1" class="hide">
  <p class="intro">Aquí ve todas sus operaciones. <b>Toque una fila para editarla</b> o use «➕ Nueva compra» para registrar una compra.</p>
  <details class="card f"><summary>🔎 Buscar y filtrar</summary><div class="g" id="flt"></div>
@@ -62,6 +93,6 @@
 </main></div></div>
 <div id="toast"></div>
 <script src="config.js?v=7"></script>
-<script src="app.js?v=7"></script>
+<script src="app.js?v=10"></script>
 </body>
 </html>
